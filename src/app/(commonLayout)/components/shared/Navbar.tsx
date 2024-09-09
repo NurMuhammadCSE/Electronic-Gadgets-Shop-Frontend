@@ -15,30 +15,28 @@ import {
 } from "@nextui-org/react";
 import { ShoppingCart } from "lucide-react";
 import { useAuth } from "@/lib/AuthProviders";
-import { logOut } from "../../action/userInfo";
 import { useRouter } from "next/navigation";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import Link from "next/link";
-import { useAppSelector } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { logout } from "@/redux/feature/userSlice";
 
 export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  //   const cartItemCount = useAppSelector((state) => state.cart.items.length); // Assuming cart state is managed in Redux
-
   const { user } = useAppSelector((state) => state.user);
-  // console.log(user);
-  const menuItems = ["Profile", "Dashboard", "Log Out"];
-
+  const dispatch = useAppDispatch();
   const { setUser } = useAuth();
   const router = useRouter();
+
+  const menuItems = ["Profile", "Dashboard", "Log Out"];
 
   const routeMap: Record<string, string> = {
     user: "/dashboard",
     admin: "/dashboard/admin",
   };
 
-  const handleLogOut = async () => {
-    await logOut();
+  const handleLogout = () => {
+    dispatch(logout());
     setUser(null);
     router.push("/");
   };
@@ -46,15 +44,12 @@ export default function NavBar() {
   return (
     <Navbar isBordered isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen}>
       <NavbarContent className="sm:hidden" justify="start">
-        <NavbarMenuToggle
-          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-        />
+        <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} />
       </NavbarContent>
 
       <NavbarContent className="sm:hidden pr-3" justify="center">
         <NavbarBrand>
           <p className="font-bold text-inherit">
-            {" "}
             <Link href="/" aria-current="page">
               Gadget Hub
             </Link>
@@ -65,7 +60,6 @@ export default function NavBar() {
       <NavbarContent className="hidden sm:flex gap-4" justify="end">
         <NavbarBrand>
           <p className="font-bold text-inherit">
-            {" "}
             <Link href="/" aria-current="page">
               Gadget Hub
             </Link>
@@ -74,11 +68,11 @@ export default function NavBar() {
 
         <NavbarItem isActive>
           <Link href="/" aria-current="page">
-            Gadget Hub
+            Home
           </Link>
         </NavbarItem>
         <NavbarItem>
-          {user && <Link href={routeMap[user?.role]}>Dashboard</Link>}
+          {user?.email && <Link href={routeMap[user.role] || "/"}>Dashboard</Link>}
         </NavbarItem>
 
         <NavbarItem>
@@ -91,9 +85,9 @@ export default function NavBar() {
         <NavbarItem>
           <ThemeSwitcher />
         </NavbarItem>
-        {user ? (
+        {user?.email ? (
           <NavbarItem>
-            <Button onClick={handleLogOut} color="primary" variant="flat">
+            <Button onClick={handleLogout} color="primary" variant="flat">
               Logout
             </Button>
           </NavbarItem>
@@ -116,15 +110,15 @@ export default function NavBar() {
           <NavbarMenuItem key={`${item}-${index}`}>
             <Link
               className="w-full"
-              color={
-                index === 2
-                  ? "warning"
-                  : index === menuItems.length - 1
-                  ? "danger"
-                  : "foreground"
+              href={
+                item === "Profile"
+                  ? "/profile"
+                  : item === "Dashboard"
+                  ? routeMap[user?.role] || "/"
+                  : item === "Log Out"
+                  ? "/logout"
+                  : "/"
               }
-              href="#"
-              //   size="lg"
             >
               {item}
             </Link>
