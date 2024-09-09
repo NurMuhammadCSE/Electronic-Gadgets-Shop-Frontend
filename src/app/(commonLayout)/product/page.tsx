@@ -35,11 +35,11 @@ const ProductPage = () => {
         {
           title: "Electronics",
           products: electronicsProducts,
-          category: "electronics",
+          category: "Electronics",
         },
-        { title: "Mobiles", products: mobileProducts, category: "mobile" },
-        { title: "Fridges", products: fridgesProducts, category: "fridges" },
-        { title: "TVs", products: TVProducts, category: "tv" },
+        { title: "Mobiles", products: mobileProducts, category: "Mobile" },
+        { title: "Fridges", products: fridgesProducts, category: "Fridge" },
+        { title: "TVs", products: TVProducts, category: "TV" },
       ].map(({ title, products, category }) => (
         <div key={category} className="mb-12">
           <div className="flex items-center justify-between mb-6">
@@ -60,7 +60,7 @@ const ProductPage = () => {
             {products?.length > 1 && (
               <div className="relative mt-5 inset-0 flex items-center justify-center">
                 <Link
-                  href={`/product/${category}`}
+                  href={`/products/${category}`}
                   className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
                 >
                   See More

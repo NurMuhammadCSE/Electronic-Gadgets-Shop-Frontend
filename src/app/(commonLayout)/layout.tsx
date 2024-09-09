@@ -14,9 +14,9 @@ export default async function CommonLayout({
 }>) {
   return (
     <div>
-      <NavBar></NavBar>
-      <div className="mx-auto container ">{children}</div>
-      <Footer></Footer>
+      <NavBar />
+      <main className="min-h-screen max-w-screen-xl	mx-auto">{children}</main>
+      <Footer />
     </div>
   );
 }

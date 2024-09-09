@@ -7,7 +7,6 @@ const CommonPage = () => {
     <div>
       <Banner></Banner>
       <ProductPage></ProductPage>
-      <h1>Common Page</h1>
     </div>
   );
 };

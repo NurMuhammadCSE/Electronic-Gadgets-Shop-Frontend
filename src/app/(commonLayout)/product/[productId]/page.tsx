@@ -1,12 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import ProductDetail from "@/components/ui/ProductDetail";
 import { Product } from "@/types";
 
 // Interface for product ID params
-interface ProductId {
-  params: {
-    id: string;
-  };
-}
+// interface ProductId {
+//   params: {
+//     id: string;
+//   };
+// }
 
 // Generate static parameters for SSG (if needed, otherwise remove)
 export const generateStaticParams = async () => {
@@ -19,7 +20,7 @@ export const generateStaticParams = async () => {
 };
 
 // Product detail page component
-const ProductDetailPage = async ({ params }: ProductId) => {
+const ProductDetailPage = async ({ params }: any) => {
   const res = await fetch(
     `http://localhost:5000/api/product/product/${params.productId}`,
     {

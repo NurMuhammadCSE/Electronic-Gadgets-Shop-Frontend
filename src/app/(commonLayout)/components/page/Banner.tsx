@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const Banner = () => {
   return (
-    <section className="relative text-white overflow-hidden">
+    <section className="relative text-white overflow-hidden rounded-md">
       {/* Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center"
