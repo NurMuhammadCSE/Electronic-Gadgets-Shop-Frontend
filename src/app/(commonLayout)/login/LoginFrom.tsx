@@ -2,37 +2,68 @@
 "use client";
 import { Input } from "@nextui-org/react";
 import Link from "next/link";
-import { createRef, useEffect, useState } from "react";
-import { useFormState } from "react-dom";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { loginUser } from "../action/userInfo";
 import ActionSubmitButton from "../components/shared/submitButton/ActionSubmitButton";
 import { EyeSlashFilledIcon } from "./EyeSlashFilledIcon";
 import { EyeFilledIcon } from "./EyeFilledIcon";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { useLoginMutation } from "@/redux/api/authApi";
+import { useState } from "react";
+import { setToken, setUser } from "@/redux/feature/userSlice";
+import { jwtDecode } from "jwt-decode";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 export default function LoginFrom() {
   const router = useRouter();
-  // const ref = createRef<HTMLFormElement>();
-  // const [state, fromAction] = useFormState(loginUser, null);
-  // useEffect(() => {
-  //   if (state && state?.success) {
-  //     toast.success(state?.message);
-  //     ref.current?.reset();
-  //     router.push("/");
-  //   }
-  //   if (state && !state?.success) {
-  //     toast.error(state?.message);
-  //   }
-  // }, [state, ref]);
+  const dispatch = useAppDispatch();
+  // const { email, password } = useAppSelector((state) => state.login);
+  const [login] = useLoginMutation();
+
+  type Inputs = {
+    email: string;
+    password: string;
+  };
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Inputs>();
+
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    const loginInfo = {
+      email: data.email,
+      password: data.password,
+    };
+    try {
+      const user = await login(loginInfo);
+      const err = user?.error as { data?: { message?: string } };
+
+      if (err?.data?.message === "User Not Found") {
+        toast.error("User Not Found");
+      } else if (err?.data?.message === "Password Not Matched") {
+        toast.error("Password Not Matched");
+      } else {
+        toast.success("User Login Successfully");
+        const { token } = user.data;
+        const userToken = jwtDecode(token);
+        dispatch(setToken(token));
+        dispatch(setUser(userToken));
+        router.push("/");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const [isVisible, setIsVisible] = useState(false);
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
   return (
-    <div>
-      <form>
+    <div className="">
+      <form className="my-6 space-y-4" onSubmit={handleSubmit(onSubmit)}>
         {/* <Input name="email" type="email" label="Email" variant="bordered" /> */}
         {/* <Input
           className="mt-3"
@@ -41,39 +72,69 @@ export default function LoginFrom() {
           label="Password"
           variant="bordered"
         /> */}
-        <Input
-          isClearable
-          type="email"
-          label="Email"
-          variant="bordered"
-          placeholder="Enter your email"
-          defaultValue="junior@nextui.org"
-          onClear={() => console.log("input cleared")}
-          className="max-w-xs"
-        />
-        <Input
-          label="Password"
-          variant="bordered"
-          placeholder="Enter your password"
-          endContent={
-            <button
-              className="focus:outline-none"
-              type="button"
-              onClick={toggleVisibility}
-              aria-label="toggle password visibility"
+        <div>
+          <Input
+            isClearable
+            type="email"
+            // value={email}
+            {...register("email", { required: true })}
+            label="Email"
+            variant="bordered"
+            placeholder="Enter your email"
+            defaultValue="junior@nextui.org"
+            onClear={() => console.log("input cleared")}
+            className="max-w-xs"
+          />
+          {errors.email?.type === "required" && (
+            <p className="text-red-500">Email is required</p>
+          )}
+        </div>
+        <div>
+          <Input
+            label="Password"
+            // value={password}
+            {...register("password", { required: true })}
+            variant="bordered"
+            placeholder="Enter your password"
+            endContent={
+              <button
+                className="focus:outline-none"
+                type="button"
+                onClick={toggleVisibility}
+                aria-label="toggle password visibility"
+              >
+                {isVisible ? (
+                  <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                ) : (
+                  <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                )}
+              </button>
+            }
+            type={isVisible ? "text" : "password"}
+            className="max-w-xs mt-3"
+          />
+
+          {errors.password?.type === "required" && (
+            <p className="text-red-500">Password is required</p>
+          )}
+        </div>
+        <div className="flex items-center justify-between">
+          <div className="text-sm">
+            <Link
+              href="/register"
+              className="font-medium text-[#30415A] hover:text-[#3D6D8D]"
             >
-              {isVisible ? (
-                <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-              ) : (
-                <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-              )}
-            </button>
-          }
-          type={isVisible ? "text" : "password"}
-          className="max-w-xs mt-3"
-        />
-        <div className="flex justify-end text-primary">
-          <Link href="/register">if you dont have account sign Up</Link>
+              New here? Register now
+            </Link>
+          </div>
+          <div className="text-sm">
+            <a
+              href="#"
+              className="font-medium text-[#30415A] hover:text-[#3D6D8D]"
+            >
+              Forgot your password?
+            </a>
+          </div>
         </div>
         <div className="flex justify-end ">
           <ActionSubmitButton>login</ActionSubmitButton>

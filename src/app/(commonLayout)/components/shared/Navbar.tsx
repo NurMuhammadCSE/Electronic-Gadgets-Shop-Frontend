@@ -51,18 +51,28 @@ export default function NavBar({ user }: any) {
 
       <NavbarContent className="sm:hidden pr-3" justify="center">
         <NavbarBrand>
-          <p className="font-bold text-inherit">Gadget Hub</p>
+          <p className="font-bold text-inherit">
+            {" "}
+            <Link href="/" aria-current="page">
+              Gadget Hub
+            </Link>
+          </p>
         </NavbarBrand>
       </NavbarContent>
 
       <NavbarContent className="hidden sm:flex gap-4" justify="end">
         <NavbarBrand>
-          <p className="font-bold text-inherit">Gadget Hub</p>
+          <p className="font-bold text-inherit">
+            {" "}
+            <Link href="/" aria-current="page">
+              Gadget Hub
+            </Link>
+          </p>
         </NavbarBrand>
 
         <NavbarItem isActive>
-          <Link href="#" aria-current="page">
-            Products
+          <Link href="/" aria-current="page">
+            Gadget Hub
           </Link>
         </NavbarItem>
         <NavbarItem>
