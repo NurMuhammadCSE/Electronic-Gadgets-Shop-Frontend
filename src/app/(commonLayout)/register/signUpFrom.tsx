@@ -1,40 +1,92 @@
 "use client";
 import { Input } from "@nextui-org/react";
 import Link from "next/link";
-import { createRef, useEffect } from "react";
-import { useFormState } from "react-dom";
 import { toast } from "sonner";
-import { signUpUser } from "../action/userInfo";
 import ActionSubmitButton from "../components/shared/submitButton/ActionSubmitButton";
+import { useSignUpMutation } from "@/redux/api/authApi";
+import { useRouter } from "next/navigation";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 const SignUpFrom = () => {
-  const ref = createRef<HTMLFormElement>();
-  const [state, fromAction] = useFormState(signUpUser, null);
+  const router = useRouter();
 
-  useEffect(() => {
-    if (state && state.success) {
-      toast.success("successfully sign up");
-      ref.current?.reset();
+  const [signUp] = useSignUpMutation();
+  type Inputs = {
+    name: string;
+    email: string;
+    password: string;
+  };
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Inputs>();
+
+  // TODO: POST http://localhost:5000/api/auth/signUp net::ERR_CONNECTION_REFUSED
+  //! Sign Up Successfully
+
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    const signUpInfo = {
+      name: data.name,
+      email: data.email,
+      password: data.password,
+    };
+
+    try {
+      const user = await signUp(signUpInfo);
+      const err = user?.error as { data?: { message?: string } };
+
+      if (err?.data?.message === "User already exists") {
+        toast.error("User already exists");
+      } else {
+        toast.success("User Sign Up Successfully");
+        router.push("/login");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong!");
     }
-  }, [state, ref]);
+  };
+
   return (
     <div>
-      <form ref={ref} action={fromAction}>
-        <Input name="name" type="text" label="Name" variant="bordered" />
-        <Input
-          name="email"
-          className="mt-3"
-          type="email"
-          label="Email"
-          variant="bordered"
-        />
-        <Input
-          className="mt-3"
-          type="password"
-          label="Password"
-          name="password"
-          variant="bordered"
-        />
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div>
+          <Input
+            {...register("name", { required: true })}
+            name="name"
+            type="text"
+            label="Name"
+            variant="bordered"
+          />
+          {errors.name && <p className="text-red-500">Name is required</p>}
+        </div>
+        <div>
+          <Input
+            {...register("email", { required: true })}
+            name="email"
+            className="mt-3"
+            type="email"
+            label="Email"
+            variant="bordered"
+          />
+          {errors.email && <p className="text-red-500">Email is required</p>}
+        </div>
+
+        <div>
+          <Input
+            {...register("password", { required: true })}
+            className="mt-3"
+            type="password"
+            label="Password"
+            name="password"
+            variant="bordered"
+          />
+          {errors.password && (
+            <p className="text-red-500">Password is required</p>
+          )}
+        </div>
         <div className="flex justify-end text-primary">
           <Link href="/login">already have account ?</Link>
         </div>
