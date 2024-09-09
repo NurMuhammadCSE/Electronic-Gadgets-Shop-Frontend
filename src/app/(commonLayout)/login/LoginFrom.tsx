@@ -17,7 +17,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 export default function LoginFrom() {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  // const { email, password } = useAppSelector((state) => state.login);
+  const { email, password } = useAppSelector((state) => state.login);
   const [login] = useLoginMutation();
 
   type Inputs = {
@@ -48,6 +48,7 @@ export default function LoginFrom() {
         toast.success("User Login Successfully");
         const { token } = user.data;
         const userToken = jwtDecode(token);
+        console.log(userToken, token)
         dispatch(setToken(token));
         dispatch(setUser(userToken));
         router.push("/");
@@ -64,24 +65,14 @@ export default function LoginFrom() {
   return (
     <div className="">
       <form className="my-6 space-y-4" onSubmit={handleSubmit(onSubmit)}>
-        {/* <Input name="email" type="email" label="Email" variant="bordered" /> */}
-        {/* <Input
-          className="mt-3"
-          name="password"
-          type="password"
-          label="Password"
-          variant="bordered"
-        /> */}
         <div>
           <Input
             isClearable
             type="email"
-            // value={email}
             {...register("email", { required: true })}
             label="Email"
             variant="bordered"
             placeholder="Enter your email"
-            defaultValue="junior@nextui.org"
             onClear={() => console.log("input cleared")}
             className="max-w-xs"
           />
@@ -92,7 +83,6 @@ export default function LoginFrom() {
         <div>
           <Input
             label="Password"
-            // value={password}
             {...register("password", { required: true })}
             variant="bordered"
             placeholder="Enter your password"

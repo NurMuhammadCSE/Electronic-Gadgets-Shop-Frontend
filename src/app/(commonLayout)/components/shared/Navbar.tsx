@@ -19,12 +19,14 @@ import { logOut } from "../../action/userInfo";
 import { useRouter } from "next/navigation";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import Link from "next/link";
-// import { useAppSelector } from "@/store/hooks"; // Assuming you're using Redux
+import { useAppSelector } from "@/redux/hooks";
 
-export default function NavBar({ user }: any) {
+export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   //   const cartItemCount = useAppSelector((state) => state.cart.items.length); // Assuming cart state is managed in Redux
 
+  const { user } = useAppSelector((state) => state.user);
+  // console.log(user);
   const menuItems = ["Profile", "Dashboard", "Log Out"];
 
   const { setUser } = useAuth();

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import NavBar from "./components/shared/Navbar";
 import Footer from "./components/shared/Footer";
-import { userInfo } from "./action/userInfo";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -13,14 +12,10 @@ export default async function CommonLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const user= await userInfo()
-
   return (
     <div>
-      {/* <p>Navbar</p> */}
-      <NavBar user={user}></NavBar>
+      <NavBar></NavBar>
       <div className="mx-auto container ">{children}</div>
-      {/* <p>footer</p> */}
       <Footer></Footer>
     </div>
   );
