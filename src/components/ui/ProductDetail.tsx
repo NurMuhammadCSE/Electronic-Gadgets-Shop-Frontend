@@ -1,9 +1,18 @@
+import { addToCart } from "@/redux/feature/cartSlice";
+import { useAppDispatch } from "@/redux/hooks";
 import { Product } from "@/types";
-import Image from "next/image";
+// import Image from "next/image";
 import React from "react";
 
 const ProductDetail = ({ product }: { product: Product }) => {
   // console.log(product);
+  const dispatch = useAppDispatch();
+  const onAddToCart = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation(); // Prevents click event from bubbling up to the Link
+
+    dispatch(addToCart({ ...product, quantity: 1 }));
+  };
+
   return (
     <div>
       <div className="container mx-auto p-6">
@@ -48,7 +57,10 @@ const ProductDetail = ({ product }: { product: Product }) => {
                 )}
               </p>
             </div>
-            <button className="mt-6 px-6 py-3 bg-blue-600 text-white text-lg font-medium rounded-lg hover:bg-blue-700 transition duration-300">
+            <button
+              onClick={onAddToCart}
+              className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
               Add to Cart
             </button>
           </div>

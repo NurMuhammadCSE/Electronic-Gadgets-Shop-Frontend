@@ -4,6 +4,7 @@ import storage from "redux-persist/lib/storage";
 import { persistStore, persistReducer } from "redux-persist";
 import useReducer from "./feature/userSlice";
 import loginReducer from "./feature/loginSlice";
+import  cartReducer  from "./feature/cartSlice";
 
 const persistUserConfig = {
   key: "user",
@@ -11,12 +12,14 @@ const persistUserConfig = {
 };
 
 const persistedUserReducer = persistReducer(persistUserConfig, useReducer);
+const persistedCartReducer = persistReducer(persistUserConfig, cartReducer);
 
 export const store = configureStore({
   reducer: {
     [baseApi.reducerPath]: baseApi.reducer,
     login: loginReducer,
     user: persistedUserReducer,
+    cart: persistedCartReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }).concat(

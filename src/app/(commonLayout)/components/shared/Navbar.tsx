@@ -24,6 +24,7 @@ import { logout } from "@/redux/feature/userSlice";
 export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const { user } = useAppSelector((state) => state.user);
+  const {selectedItems} = useAppSelector(state => state.cart)
   const dispatch = useAppDispatch();
   const { setUser } = useAuth();
   const router = useRouter();
@@ -81,7 +82,7 @@ export default function NavBar() {
         </NavbarItem>
 
         <NavbarItem>
-          <Badge content={10} color="warning">
+          <Badge content={selectedItems} color="warning">
             <Link href="/cart">
               <ShoppingCart size={24} />
             </Link>
