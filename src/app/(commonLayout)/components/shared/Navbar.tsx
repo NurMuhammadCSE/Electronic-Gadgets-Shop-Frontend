@@ -71,6 +71,11 @@ export default function NavBar() {
             Home
           </Link>
         </NavbarItem>
+        <NavbarItem isActive>
+          <Link href="/product" aria-current="page">
+            Products
+          </Link>
+        </NavbarItem>
         <NavbarItem>
           {user?.email && <Link href={routeMap[user.role] || "/"}>Dashboard</Link>}
         </NavbarItem>

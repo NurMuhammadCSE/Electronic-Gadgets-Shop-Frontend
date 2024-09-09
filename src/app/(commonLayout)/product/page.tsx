@@ -9,9 +9,8 @@ const ProductPage = () => {
 
   if (isLoading) return <p className="text-center text-gray-500">Loading...</p>;
   if (isError) return <p className="text-center text-red-500">Error loading products</p>;
-
-
-  // console.log(data?.data);
+  console.log(data?.data);
+  
   // const res = await fetch("http://localhost:5000/api/product/products", {
   //   next: {
   //     revalidate: 30,
