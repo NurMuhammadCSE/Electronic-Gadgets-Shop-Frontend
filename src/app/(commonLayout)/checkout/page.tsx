@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -8,15 +9,16 @@ import { clearCart } from "@/redux/feature/cartSlice";
 import { Trash2 } from "lucide-react";
 // import { useRouter } from "next/router";
 import { toast } from "sonner";
-import { createOrder } from "@/redux/feature/orderSlice";
+// import { createOrder } from "@/redux/feature/orderSlice";
+import { useCreteOrderMutation } from "@/redux/api/orderApi";
 
 const CheckoutPage = () => {
   const dispatch = useAppDispatch();
   // const router = useRouter();
 
   const { products, totalPrice } = useAppSelector((state) => state.cart);
-  const { user } = useAppSelector((state) => state.user);
-  console.log(user);
+  const [createOrder, { isError, isLoading }] = useCreteOrderMutation();
+  const { user, token } = useAppSelector((state) => state.user);
   const deliveryCharge = 15;
   const grandTotal = totalPrice + deliveryCharge;
 
@@ -24,18 +26,19 @@ const CheckoutPage = () => {
     dispatch(clearCart());
   };
 
-  const handleProceedCheckout = () => {
+  const handleProceedCheckout = async () => {
     const order = {
-      userId: user.userId,
-      userName: user.name,
-      userEmail: user.email,
-      items: products,
-      total: grandTotal,
-      status: "pending",
+      products: products.map((product:any) => ({
+        product: product._id, // Make sure the product object has _id
+        quantity: product.quantity,
+      })),
+      totalAmount: grandTotal,
+      status: "Pending",
       paymentMethod: "Cash On Delivery",
     };
     console.log(order);
-    dispatch(createOrder(order));
+    // dispatch(createOrder(order));
+    await createOrder({ order, token });
     toast.success("Order placed successfully!");
     handleClearCart();
     // router.push("/order-success");

@@ -9,11 +9,13 @@ interface OrderItem {
 }
 
 interface Order {
-  userId: string;
-  userName: string;
-  userEmail: string;
-  items: OrderItem[];
-  total: number;
+  user: {
+    userId: string;
+    userName: string;
+    userEmail: string;
+  };
+  products: OrderItem[];
+  totalAmount: number;
   status: string;
   paymentMethod: string;
 }
