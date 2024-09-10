@@ -1,3 +1,4 @@
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @next/next/no-img-element */
 import { addToCart } from "@/redux/feature/cartSlice";
@@ -40,7 +41,6 @@ const ProductCard = ({ product }: { product: Product }) => {
             ${price.toFixed(2)}
           </span>
           <button
-            // onClick={onAddToCart}
             onClick={(e) => {
               e.stopPropagation();
               handleAddToCart(product);
