@@ -17,18 +17,9 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
   const dispatch = useDispatch();
 
   const { data: reviews } = useGetReviewsByProductIdQuery(product._id);
-  console.log(reviews?.data);
+  // console.log(reviews?.data);
   const onAddToCart = () => {
     dispatch(addToCart(product));
-  };
-
-  const handleReviewSubmit = async (review: string, rating: number) => {
-    const newReview = {
-      productId: product._id,
-      review,
-      rating,
-    };
-    console.log(newReview);
   };
 
   return (
@@ -80,7 +71,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
           <h2 className="text-2xl font-semibold mb-4">Product Reviews</h2>
           <div className="space-y-4">
             {reviews?.data?.length > 0 ? (
-              reviews?.data?.map((review:any, index:any) => (
+              reviews?.data?.map((review: any, index: any) => (
                 <div key={index} className="bg-gray-100 p-4 rounded">
                   <p className="text-lg">{review.review}</p>
                   <p className="text-sm text-gray-600">
@@ -92,10 +83,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
               <p>No reviews yet for this product.</p>
             )}
           </div>
-          <ReviewForm
-            productId={product._id}
-            onReviewSubmit={handleReviewSubmit}
-          />
+          <ReviewForm productId={product._id} />
         </div>
       </div>
     </div>

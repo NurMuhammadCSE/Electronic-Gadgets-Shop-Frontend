@@ -1,29 +1,48 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store"; // Adjust this to your store location
+import { useCreateReviewMutation } from "@/redux/api/reviewApi";
+import { toast } from "sonner";
 
 interface ReviewFormProps {
   productId: string;
-  onReviewSubmit: (review: string, rating: number) => void;
 }
 
-const ReviewForm: React.FC<ReviewFormProps> = ({
-  productId,
-  onReviewSubmit,
-}) => {
+const ReviewForm: React.FC<ReviewFormProps> = ({ productId }) => {
   const [reviewText, setReviewText] = useState("");
   const [rating, setRating] = useState<number>(5); // Default rating
-
   const { user } = useSelector((state: RootState) => state.user);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // useCreateReviewMutation hook to submit the review
+  const [createReview, { isLoading }] = useCreateReviewMutation();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!user) {
       alert("You must be logged in to submit a review.");
       return;
     }
-    onReviewSubmit(reviewText, rating);
-    setReviewText("");
+
+    try {
+      const orderData = {
+        review: reviewText,
+        rating,
+        // userId: user.userId, // Assuming `user` has an `_id` field
+        productId,
+      };
+
+      // Call the createReview mutation
+      await createReview({ orderData, productId }).unwrap();
+      toast.success("Review submitted successfully!");
+
+      // Reset form fields after submission
+      setReviewText("");
+      setRating(5);
+    } catch (error) {
+      console.error("Failed to submit review:", error);
+      toast.error("Failed to submit review.");
+    }
   };
 
   return (
@@ -53,8 +72,9 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
         <button
           className="px-4 py-2 bg-blue-600 text-white rounded"
           type="submit"
+          disabled={isLoading} // Disable button while submitting
         >
-          Submit Review
+          {isLoading ? "Submitting..." : "Submit Review"}
         </button>
       </form>
     </div>
