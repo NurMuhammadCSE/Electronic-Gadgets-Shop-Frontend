@@ -1,88 +1,13 @@
-"use client"
-
-// import { addToCart } from "@/redux/feature/cartSlice";
-// import { useAppDispatch } from "@/redux/hooks";
-// import { Product } from "@/types";
-// // import Image from "next/image";
-// import React from "react";
-// import { toast } from "sonner";
-
-// const ProductDetail = ({ product }: { product: Product }) => {
-//   console.log(product);
-//   const dispatch = useAppDispatch();
-
-//   const handleAddToCart = (product: any) => {
-//     dispatch(addToCart(product));
-//     toast.success(`${name} is added to cart Successfully`);
-//   };
-
-//   return (
-//     <div>
-//       <div className="container mx-auto p-6">
-//         <div className="flex flex-col md:flex-row items-center bg-white shadow-lg rounded-lg overflow-hidden">
-//           <img
-//             src={product?.imageUrl}
-//             alt={product?.name}
-//             className="w-full md:w-1/2 h-auto object-cover"
-//           />
-//           {/* <div>
-//             <Image
-//               src={product?.imageUrl}
-//               alt={product?.name}
-//               className="w-full md:w-1/2 h-auto object-cover"
-//               width={50}
-//               height={400}
-//             ></Image>
-//           </div> */}
-//           <div className="w-full md:w-1/2 p-6">
-//             <h1 className="text-4xl font-bold text-gray-800 mb-4">
-//               {product?.name}
-//             </h1>
-//             <p className="text-gray-600 text-lg mb-4">{product?.description}</p>
-//             <p className="text-xl font-semibold text-blue-600 mb-4">
-//               ${product?.price.toFixed(2)}
-//             </p>
-//             <div className="text-sm text-gray-700 mb-4">
-//               <p>
-//                 <span className="font-bold">Category:</span> {product?.category}
-//               </p>
-//               <p>
-//                 <span className="font-bold">Brand:</span> {product?.brand}
-//               </p>
-//               <p>
-//                 <span className="font-bold">Stock:</span>{" "}
-//                 {product?.stock > 0 ? (
-//                   <span className="text-green-500">
-//                     In Stock ({product?.stock} units available)
-//                   </span>
-//                 ) : (
-//                   <span className="text-red-500">Out of Stock</span>
-//                 )}
-//               </p>
-//             </div>
-//             <button
-//               onClick={(e) => {
-//                 e.stopPropagation();
-//                 handleAddToCart(product);
-//               }}
-//               className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-//             >
-//               Add to Cart
-//             </button>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default ProductDetail;
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @next/next/no-img-element */
+"use client";
 
 import React from "react";
 import { useDispatch } from "react-redux";
 import { Product } from "@/types";
 import { addToCart } from "@/redux/feature/cartSlice";
+import ReviewForm from "./ReviewForm";
+import { useGetReviewsByProductIdQuery } from "@/redux/api/reviewApi";
 
 interface ProductDetailProps {
   product: Product;
@@ -91,8 +16,19 @@ interface ProductDetailProps {
 const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
   const dispatch = useDispatch();
 
+  const { data: reviews } = useGetReviewsByProductIdQuery(product._id);
+  console.log(reviews?.data);
   const onAddToCart = () => {
-    dispatch(addToCart(product)); 
+    dispatch(addToCart(product));
+  };
+
+  const handleReviewSubmit = async (review: string, rating: number) => {
+    const newReview = {
+      productId: product._id,
+      review,
+      rating,
+    };
+    console.log(newReview);
   };
 
   return (
@@ -105,16 +41,30 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
             className="w-full md:w-1/2 h-auto object-cover"
           />
           <div className="w-full md:w-1/2 p-6">
-            <h1 className="text-4xl font-bold text-gray-800 mb-4">{product?.name}</h1>
+            <h1 className="text-4xl font-bold text-gray-800 mb-4">
+              {product?.name}
+            </h1>
             <p className="text-gray-600 text-lg mb-4">{product?.description}</p>
-            <p className="text-xl font-semibold text-blue-600 mb-4">${product?.price.toFixed(2)}</p>
+            <p className="text-xl font-semibold text-blue-600 mb-4">
+              ${product?.price.toFixed(2)}
+            </p>
             <div className="text-sm text-gray-700 mb-4">
-              <p><span className="font-bold">Category:</span> {product?.category}</p>
-              <p><span className="font-bold">Brand:</span> {product?.brand}</p>
-              <p><span className="font-bold">Stock:</span> {product?.stock > 0 ? 
-                <span className="text-green-500">In Stock ({product?.stock} units available)</span> 
-                : <span className="text-red-500">Out of Stock</span>
-              }</p>
+              <p>
+                <span className="font-bold">Category:</span> {product?.category}
+              </p>
+              <p>
+                <span className="font-bold">Brand:</span> {product?.brand}
+              </p>
+              <p>
+                <span className="font-bold">Stock:</span>{" "}
+                {product?.stock > 0 ? (
+                  <span className="text-green-500">
+                    In Stock ({product?.stock} units available)
+                  </span>
+                ) : (
+                  <span className="text-red-500">Out of Stock</span>
+                )}
+              </p>
             </div>
             <button
               onClick={onAddToCart}
@@ -123,6 +73,29 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
               Add to Cart
             </button>
           </div>
+        </div>
+
+        {/* Review Section */}
+        <div className="my-10">
+          <h2 className="text-2xl font-semibold mb-4">Product Reviews</h2>
+          <div className="space-y-4">
+            {reviews?.data?.length > 0 ? (
+              reviews?.data?.map((review:any, index:any) => (
+                <div key={index} className="bg-gray-100 p-4 rounded">
+                  <p className="text-lg">{review.review}</p>
+                  <p className="text-sm text-gray-600">
+                    Rating: {review.rating} Stars
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p>No reviews yet for this product.</p>
+            )}
+          </div>
+          <ReviewForm
+            productId={product._id}
+            onReviewSubmit={handleReviewSubmit}
+          />
         </div>
       </div>
     </div>
