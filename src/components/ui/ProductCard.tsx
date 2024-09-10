@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @next/next/no-img-element */
 import { addToCart } from "@/redux/feature/cartSlice";
 import { Product } from "@/types";
 // import Image from "next/image";
@@ -10,10 +12,15 @@ const ProductCard = ({ product }: { product: Product }) => {
   const dispatch = useDispatch();
   const { imageUrl, name, description, price, _id } = product;
 
-  const onAddToCart = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.stopPropagation(); // Prevents click event from bubbling up to the Link
+  // const onAddToCart = (event: React.MouseEvent<HTMLButtonElement>) => {
+  //   event.stopPropagation(); // Prevents click event from bubbling up to the Link
 
-    dispatch(addToCart({ ...product, quantity: 1 }));
+  //   dispatch(addToCart({ ...product, quantity: 1 }));
+  //   toast.success(`${name} is added to cart Successfully`);
+  // };
+
+  const handleAddToCart = (product: any) => {
+    dispatch(addToCart(product));
     toast.success(`${name} is added to cart Successfully`);
   };
 
@@ -28,17 +35,21 @@ const ProductCard = ({ product }: { product: Product }) => {
       </Link>
 
       <div className="p-4">
-      <div className="flex items-center justify-between mt-1">
-        <span className="text-lg font-bold text-gray-900">
-          ${price.toFixed(2)}
-        </span>
-        <button
-          onClick={onAddToCart}
-          className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          Add to Cart
-        </button>
-      </div>
+        <div className="flex items-center justify-between mt-1">
+          <span className="text-lg font-bold text-gray-900">
+            ${price.toFixed(2)}
+          </span>
+          <button
+            // onClick={onAddToCart}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleAddToCart(product);
+            }}
+            className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            Add to Cart
+          </button>
+        </div>
       </div>
     </div>
   );
