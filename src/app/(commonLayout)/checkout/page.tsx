@@ -1,20 +1,22 @@
-"use client"
+"use client";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { clearCart } from "@/redux/feature/cartSlice";
-// import { createOrder } from "@/redux/feature/orderSlice";
 import { Trash2 } from "lucide-react";
 // import { useRouter } from "next/router";
 import { toast } from "sonner";
+import { createOrder } from "@/redux/feature/orderSlice";
 
 const CheckoutPage = () => {
   const dispatch = useAppDispatch();
   // const router = useRouter();
-  
+
   const { products, totalPrice } = useAppSelector((state) => state.cart);
+  const { user } = useAppSelector((state) => state.user);
+  console.log(user);
   const deliveryCharge = 15;
   const grandTotal = totalPrice + deliveryCharge;
 
@@ -24,13 +26,16 @@ const CheckoutPage = () => {
 
   const handleProceedCheckout = () => {
     const order = {
-      products,
+      userId: user.userId,
+      userName: user.name,
+      userEmail: user.email,
+      items: products,
       total: grandTotal,
       status: "pending",
       paymentMethod: "Cash On Delivery",
     };
-    console.log(order)
-    // dispatch(createOrder(order));
+    console.log(order);
+    dispatch(createOrder(order));
     toast.success("Order placed successfully!");
     handleClearCart();
     // router.push("/order-success");
@@ -39,23 +44,34 @@ const CheckoutPage = () => {
   return (
     <div className="container mx-auto p-4 lg:p-8 bg-white rounded shadow-md">
       <h1 className="text-3xl font-bold mb-6 text-center">Checkout</h1>
-      
+
       {products.length === 0 ? (
         <p className="text-center text-gray-600">Your cart is empty.</p>
       ) : (
         <div className="space-y-6">
           <div className="bg-gray-100 p-4 rounded">
             <h2 className="text-2xl font-semibold mb-4">Order Summary</h2>
-            {products.map((item:any) => (
-              <div key={item.id} className="flex justify-between items-center py-2 border-b">
+            {products.map((item: any) => (
+              <div
+                key={item.id}
+                className="flex justify-between items-center py-2 border-b"
+              >
                 <div className="flex items-center space-x-4">
-                  <img src={item.imageUrl} alt={item.name} className="w-16 h-16 object-cover rounded" />
+                  <img
+                    src={item.imageUrl}
+                    alt={item.name}
+                    className="w-16 h-16 object-cover rounded"
+                  />
                   <div>
                     <p className="text-lg font-medium">{item.name}</p>
-                    <p className="text-sm text-gray-600">Quantity: {item.quantity}</p>
+                    <p className="text-sm text-gray-600">
+                      Quantity: {item.quantity}
+                    </p>
                   </div>
                 </div>
-                <p className="text-lg font-semibold">${(item.price * item.quantity).toFixed(2)}</p>
+                <p className="text-lg font-semibold">
+                  ${(item.price * item.quantity).toFixed(2)}
+                </p>
               </div>
             ))}
           </div>
@@ -63,8 +79,16 @@ const CheckoutPage = () => {
           <div className="bg-gray-100 p-4 rounded">
             <h2 className="text-2xl font-semibold mb-4">Payment Method</h2>
             <div className="flex items-center">
-              <input type="radio" id="cod" name="payment" defaultChecked className="mr-2" />
-              <label htmlFor="cod" className="text-lg">Cash On Delivery</label>
+              <input
+                type="radio"
+                id="cod"
+                name="payment"
+                defaultChecked
+                className="mr-2"
+              />
+              <label htmlFor="cod" className="text-lg">
+                Cash On Delivery
+              </label>
             </div>
           </div>
 
@@ -76,7 +100,9 @@ const CheckoutPage = () => {
             </div>
             <div className="flex justify-between items-center mt-2">
               <p className="text-lg">Delivery Charge:</p>
-              <p className="text-lg font-semibold">${deliveryCharge.toFixed(2)}</p>
+              <p className="text-lg font-semibold">
+                ${deliveryCharge.toFixed(2)}
+              </p>
             </div>
             <div className="flex justify-between items-center mt-4 border-t pt-4">
               <p className="text-xl font-bold">Grand Total:</p>
