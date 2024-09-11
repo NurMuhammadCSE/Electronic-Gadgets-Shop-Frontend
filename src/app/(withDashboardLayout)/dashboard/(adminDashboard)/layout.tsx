@@ -16,9 +16,9 @@ export default async function userDashboardLayout({
   return (
     <div>
       <NavBar />
-      <AdminSidebar></AdminSidebar>
+      {/* <AdminSidebar></AdminSidebar> */}
       <main className="min-h-screen max-w-screen-xl	mx-auto">{children}</main>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }

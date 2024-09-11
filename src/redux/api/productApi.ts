@@ -12,10 +12,20 @@ const productApi = baseApi.injectEndpoints({
     getSingleProduct: builder.query({
       query: (productId) => ({
         method: "GET",
-        url: `product/product/${productId}`,
+        url: `/product/product/${productId}`,
       }),
+    }),
+    deleteProduct: builder.mutation({
+      query: ({productId, token}) => ({
+        method: "DELETE",
+        url: `/product/${productId}`,
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+        },
+      }),
+      invalidatesTags:['Products']
     }),
   }),
 });
 
-export const { useGetProductsQuery, useGetSingleProductQuery } = productApi;
+export const { useGetProductsQuery, useGetSingleProductQuery, useDeleteProductMutation } = productApi;

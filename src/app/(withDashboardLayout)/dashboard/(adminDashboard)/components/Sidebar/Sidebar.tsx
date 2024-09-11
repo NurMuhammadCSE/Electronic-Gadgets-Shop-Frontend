@@ -1,3 +1,5 @@
+"use client"
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import Link from "next/link";
@@ -31,27 +33,21 @@ const AdminSidebar: React.FC = () => {
         <nav className="mt-6">
           <ul>
             <li className="p-4 hover:bg-gray-700 transition-colors">
-              <Link href="/dashboard/products">
-                <a className="flex items-center">
-                  <LayoutGrid className="w-5 h-5 mr-2" />
-                  Products Table
-                </a>
+              <Link href="/dashboard/products" className="flex items-center">
+                <LayoutGrid className="w-5 h-5 mr-2" />
+                Products Table
               </Link>
             </li>
             <li className="p-4 hover:bg-gray-700 transition-colors">
-              <Link href="/dashboard/products/add-product">
-                <a className="flex items-center">
-                  <Plus className="w-5 h-5 mr-2" />
-                  Add Product
-                </a>
+              <Link href="/dashboard/products/add-product" className="flex items-center">
+                <Plus className="w-5 h-5 mr-2" />
+                Add Product
               </Link>
             </li>
             <li className="p-4 hover:bg-gray-700 transition-colors">
-              <Link href="/dashboard/orders">
-                <a className="flex items-center">
-                  <Package className="w-5 h-5 mr-2" />
-                  Orders Management
-                </a>
+              <Link href="/dashboard/orders" className="flex items-center">
+                <Package className="w-5 h-5 mr-2" />
+                Orders Management
               </Link>
             </li>
           </ul>

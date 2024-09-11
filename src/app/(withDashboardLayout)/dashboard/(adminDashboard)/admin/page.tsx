@@ -1,22 +1,73 @@
 /* eslint-disable @next/next/no-img-element */
-"use client"
+"use client";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@nextui-org/react";
-import { useGetProductsQuery } from "@/redux/api/productApi";
+import {
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+} from "@nextui-org/react";
+import {
+  useDeleteProductMutation,
+  useGetProductsQuery,
+} from "@/redux/api/productApi";
 import { Edit, Trash } from "lucide-react"; // lucide-react icons
+import { toast } from "sonner";
+import { useAppSelector } from "@/redux/hooks";
+import Swal from 'sweetalert2'
 
 const AdminProductsTable: React.FC = () => {
   const { data: productsData, isLoading, error } = useGetProductsQuery("");
+  const [deleteProduct] = useDeleteProductMutation();
+  const { token } = useAppSelector((state) => state.user);
+
+  const handleEditProduct = async (id: string) => {
+    // Navigate to product edit page or open a modal for editing
+    console.log("Edit product:", id);
+  };
+
+  const handleDeleteProduct = async (productId: string) => {
+    // Show confirmation pop-up
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "Cancel", // Text for cancel button
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        // Proceed with the deletion only if the user confirms
+        try {
+          await deleteProduct({ productId, token });
+          toast.success("Product deleted successfully");
   
+          // Show success message
+          Swal.fire("Deleted!", "The product has been deleted.", "success");
+        } catch (error) {
+          toast.error("Error deleting the product");
+          Swal.fire("Error!", "There was a problem deleting the product.", "error");
+        }
+      }
+    });
+  };
+  
+
   if (isLoading) return <p>Loading products...</p>;
   if (error) return <p>Error loading products</p>;
 
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">Product Management</h1>
-      
+      <h1 className="text-3xl font-bold text-gray-800 mb-6">
+        Product Management
+      </h1>
+
       <Table
         aria-label="Product Management Table"
         className="shadow-lg rounded-lg bg-white"
@@ -50,7 +101,9 @@ const AdminProductsTable: React.FC = () => {
                       : "bg-red-100 text-red-600"
                   }`}
                 >
-                  {product.stock > 0 ? `${product.stock} in stock` : "Out of stock"}
+                  {product.stock > 0
+                    ? `${product.stock} in stock`
+                    : "Out of stock"}
                 </span>
               </TableCell>
               <TableCell>${product.price.toFixed(2)}</TableCell>
@@ -78,16 +131,6 @@ const AdminProductsTable: React.FC = () => {
       </Table>
     </div>
   );
-};
-
-const handleEditProduct = (id: string) => {
-  // Navigate to product edit page or open a modal for editing
-  console.log("Edit product:", id);
-};
-
-const handleDeleteProduct = (id: string) => {
-  // Add delete confirmation and logic
-  console.log("Delete product:", id);
 };
 
 export default AdminProductsTable;
