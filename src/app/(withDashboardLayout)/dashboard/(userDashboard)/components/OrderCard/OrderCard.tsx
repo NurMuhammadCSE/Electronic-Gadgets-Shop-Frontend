@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import RatingForm from "../RatingForm/RatingForm";
-import ProductDetails from "../productDetails/ProductDetails";
+import OrderProductDetails from "../OrderProductDetails/OrderProductDetails";
 
 const OrderCard: React.FC<{ order: any }> = ({ order }) => {
   const { status, products, createdAt } = order;
@@ -21,7 +21,7 @@ const OrderCard: React.FC<{ order: any }> = ({ order }) => {
             // <li key={idx}>
             //   {product.product} - ${product.quantity}
             // </li>
-            <ProductDetails key={idx} product={product} />
+            <OrderProductDetails key={idx} product={product} />
           ))}
         </ul>
       </div>
