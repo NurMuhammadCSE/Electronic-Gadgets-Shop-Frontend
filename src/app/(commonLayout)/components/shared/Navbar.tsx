@@ -32,7 +32,7 @@ export default function NavBar() {
   const menuItems = ["Profile", "Dashboard", "Log Out"];
 
   const routeMap: Record<string, string> = {
-    user: "/dashboard",
+    user: "/dashboard/my-orders",
     admin: "/dashboard/admin",
   };
 

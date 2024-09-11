@@ -9,16 +9,13 @@ const productApi = baseApi.injectEndpoints({
       }),
       providesTags: ["Products"],
     }),
-    // creteOrder: builder.mutation({
-    //   query: (data) => {
-    //     return {
-    //       method: "POST",
-    //       url: `/order/create`,
-    //       body: data,
-    //     };
-    //   },
-    // }),
+    getSingleProduct: builder.query({
+      query: (productId) => ({
+        method: "GET",
+        url: `product/product/${productId}`,
+      }),
+    }),
   }),
 });
 
-export const { useGetProductsQuery } = productApi;
+export const { useGetProductsQuery, useGetSingleProductQuery } = productApi;

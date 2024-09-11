@@ -28,9 +28,12 @@ const CheckoutPage = () => {
 
   const handleProceedCheckout = async () => {
     const order = {
-      products: products.map((product:any) => ({
+      user: user.userId,
+      products: products.map((product: any) => ({
         product: product._id, // Make sure the product object has _id
         quantity: product.quantity,
+        // name:product.name,
+        // price:product.price
       })),
       totalAmount: grandTotal,
       status: "Pending",

@@ -15,7 +15,16 @@ const productApi = baseApi.injectEndpoints({
         };
       },
     }),
+    getUserOrders: builder.query({
+      query: (token) => ({
+        method: "GET",
+        url: "/order/user-orders",
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+        },
+      }),
+    }),
   }),
 });
 
-export const { useCreteOrderMutation } = productApi;
+export const { useCreteOrderMutation, useGetUserOrdersQuery } = productApi;
