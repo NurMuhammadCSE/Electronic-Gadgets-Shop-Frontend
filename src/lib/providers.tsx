@@ -12,7 +12,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <NextThemesProvider attribute="class" defaultTheme="dark">
         <Toaster></Toaster>
         <Provider store={store}>
-          <AuthProvider>{children}</AuthProvider>
+          {/* <AuthProvider>{children}</AuthProvider> */}
+          {children}
         </Provider>
       </NextThemesProvider>
     </NextUIProvider>
