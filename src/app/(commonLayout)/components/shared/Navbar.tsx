@@ -24,12 +24,12 @@ import { logout } from "@/redux/feature/userSlice";
 export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const { user } = useAppSelector((state) => state.user);
-  const {selectedItems} = useAppSelector(state => state.cart)
+  const { selectedItems } = useAppSelector((state) => state.cart);
   const dispatch = useAppDispatch();
   const { setUser } = useAuth();
   const router = useRouter();
 
-  const menuItems = ["Profile", "Dashboard", "Log Out"];
+  const menuItems = ["Products", "Dashboard", "Log Out"];
 
   const routeMap: Record<string, string> = {
     user: "/dashboard/my-orders",
@@ -43,7 +43,12 @@ export default function NavBar() {
   };
 
   return (
-    <Navbar isBordered isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen}>
+    <Navbar
+      maxWidth="2xl"
+      // isBordered
+      isMenuOpen={isMenuOpen}
+      onMenuOpenChange={setIsMenuOpen}
+    >
       <NavbarContent className="sm:hidden" justify="start">
         <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} />
       </NavbarContent>
@@ -67,12 +72,12 @@ export default function NavBar() {
           </p>
         </NavbarBrand>
 
-        <NavbarItem isActive>
+        <NavbarItem>
           <Link href="/" aria-current="page">
             Home
           </Link>
         </NavbarItem>
-        <NavbarItem isActive>
+        <NavbarItem>
           <Link href="/product" aria-current="page">
             Products
           </Link>
@@ -98,27 +103,27 @@ export default function NavBar() {
             </Button>
           </NavbarItem>
         ) : (
-          <NavbarItem className="hidden lg:flex">
+          <NavbarItem>
             <Link href="/login">Login</Link>
           </NavbarItem>
         )}
       </NavbarContent>
 
       <NavbarMenu>
-        <NavbarItem>
-          <Badge content={10} color="warning">
+        <NavbarMenuItem>
+          <Badge content={selectedItems} color="warning">
             <Link href="/cart">
               <ShoppingCart size={24} />
             </Link>
           </Badge>
-        </NavbarItem>
+        </NavbarMenuItem>
         {menuItems.map((item, index) => (
           <NavbarMenuItem key={`${item}-${index}`}>
             <Link
               className="w-full"
               href={
-                item === "Profile"
-                  ? "/profile"
+                item === "Products"
+                  ? "/product"
                   : item === "Dashboard"
                   ? routeMap[user?.role] || "/"
                   : item === "Log Out"

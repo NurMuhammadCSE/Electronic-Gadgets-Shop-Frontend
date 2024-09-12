@@ -1,7 +1,5 @@
-import Footer from "@/app/(commonLayout)/components/shared/Footer";
-import NavBar from "@/app/(commonLayout)/components/shared/Navbar";
 import type { Metadata } from "next";
-import AdminSidebar from "./components/Sidebar/Sidebar";
+import Sidebar from "./components/Sidebar/Sidebar";
 
 export const metadata: Metadata = {
   title: "Admin Dashboard",
@@ -14,11 +12,11 @@ export default async function userDashboardLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div>
-      <NavBar />
-      {/* <AdminSidebar></AdminSidebar> */}
-      <main className="min-h-screen max-w-screen-xl	mx-auto">{children}</main>
-      {/* <Footer /> */}
+    <div className="flex">
+      <Sidebar />
+      <main className="flex-1 p-6 bg-gray-100">
+        {children}
+      </main>
     </div>
   );
 }
