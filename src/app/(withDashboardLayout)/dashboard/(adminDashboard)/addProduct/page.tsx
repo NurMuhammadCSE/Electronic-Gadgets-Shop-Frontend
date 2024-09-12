@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -7,6 +8,7 @@ import { useCreateProductMutation, useGetProductsQuery } from "@/redux/api/produ
 import axios from "axios"; // Add axios for file uploads
 import { useAppSelector } from "@/redux/hooks";
 import { toast } from "sonner";
+import { useRouter } from 'next/navigation'
 
 const AddProduct = () => {
   const [productData, setProductData] = useState({
@@ -19,6 +21,7 @@ const AddProduct = () => {
     brand:""
   });
   const [loading, setLoading] = useState(false);
+  const router = useRouter(); // Initialize useRouter
 
   // Fetch products to extract categories
   const { data: products } = useGetProductsQuery("");
@@ -59,6 +62,7 @@ const AddProduct = () => {
     } catch (error) {
       console.error("Error uploading image", error);
       toast.error("Failed to upload image");
+      
     } finally {
       setLoading(false);
     }
@@ -82,8 +86,10 @@ const AddProduct = () => {
       }
 
       const newProduct = await createProduct({ productData, token }).unwrap();
-      console.log(newProduct);
+      // console.log(newProduct);
       toast.success("Product added successfully");
+      router.push("/product"); // Adjust the route as needed
+
       setProductData({
         name: "",
         description: "",
@@ -93,6 +99,7 @@ const AddProduct = () => {
         stock: "",
         imageUrl: "",
       });
+
     } catch (error) {
       console.error("Error creating product", error);
       toast.error("Failed to add product");
