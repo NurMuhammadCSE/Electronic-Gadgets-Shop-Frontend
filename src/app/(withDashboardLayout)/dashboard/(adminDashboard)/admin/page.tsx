@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   Table,
   TableHeader,
@@ -10,6 +10,15 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  Select,
+  SelectItem,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+  Input,
 } from "@nextui-org/react";
 import {
   useDeleteProductMutation,
@@ -20,15 +29,7 @@ import { Edit, Trash } from "lucide-react"; // lucide-react icons
 import { toast } from "sonner";
 import { useAppSelector } from "@/redux/hooks";
 import Swal from "sweetalert2";
-import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
-  Input,
-} from "@nextui-org/react";
+import axios from "axios";
 import Image from "next/image";
 
 const AdminProductsTable: React.FC = () => {
@@ -41,22 +42,90 @@ const AdminProductsTable: React.FC = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [currentProduct, setCurrentProduct] = useState<any>(null);
   const [editedProduct, setEditedProduct] = useState<any>({});
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | ArrayBuffer | null>(
+    null
+  );
+
+  const { data: products } = useGetProductsQuery("");
+
+  // Get unique categories from the product data
+  const categories = useMemo(() => {
+    const categorySet = new Set(
+      products?.data?.map((product: any) => product.category)
+    );
+    return Array.from(categorySet);
+  }, [products]);
 
   // Handle Edit product - Open the modal with pre-filled product data
   const handleEditProduct = (product: any) => {
     setCurrentProduct(product);
     setEditedProduct(product); // Pre-fill the form with current product details
+    setImagePreview(product.imageUrl); // Set image preview
     setIsEditModalOpen(true); // Open modal
+  };
+
+  // Handle Image File Change
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Handle Image Upload
+  const handleImageUpload = async () => {
+    if (imageFile) {
+      try {
+        const formData = new FormData();
+        formData.append("image", imageFile);
+
+        const response = await axios.post(
+          "https://api.imgbb.com/1/upload",
+          formData,
+          {
+            params: {
+              key: "68c40fc46fe61300befd1b168543a8b7",
+            },
+          }
+        );
+        return response.data.data.url; // Return image URL from ImageBB response
+      } catch (error) {
+        console.error("Error uploading image", error);
+        toast.error("Error uploading image");
+        return null;
+      }
+    }
+    return null;
   };
 
   // Handle Update Product
   const handleUpdateProduct = async () => {
     try {
+      let imageUrl = currentProduct.imageUrl; // Default to current image URL if no new image is provided
+
+      // Upload image if a new image is selected
+      if (imageFile) {
+        imageUrl = await handleImageUpload();
+      }
+
+      const updatedProduct = {
+        ...editedProduct,
+        imageUrl, // Use the updated image URL
+      };
+      // console.log(updatedProduct)
+      // Update product via the mutation
       await updateProduct({
         productId: currentProduct._id,
         token,
-        editedProduct,
-      });
+        updatedProduct,
+      }).unwrap(); // Ensure the mutation is awaited
+
       toast.success("Product updated successfully");
       setIsEditModalOpen(false); // Close modal after success
     } catch (error) {
@@ -123,13 +192,6 @@ const AdminProductsTable: React.FC = () => {
                     alt={product.name}
                     className="w-10 h-10 object-cover rounded-md mr-4"
                   />
-                   {/* <Image
-                    src={product.imageUrl}
-                    alt={product.name}
-                    width={40}
-                    height={40}
-                    className="w-10 h-10 object-cover rounded-md mr-4"
-                  /> */}
                   <span className="font-medium">{product.name}</span>
                 </div>
               </TableCell>
@@ -180,20 +242,50 @@ const AdminProductsTable: React.FC = () => {
         <ModalContent>
           <ModalHeader>Edit Product</ModalHeader>
           <ModalBody>
+            {/* Product Image Preview */}
+            {imagePreview && (
+              <div className="mb-4">
+                <img
+                  src={imagePreview as string}
+                  alt="Product Preview"
+                  className="w-24 h-24 object-cover rounded-md"
+                />
+              </div>
+            )}
+            <Input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="mb-4"
+            />
             <Input
               label="Product Name"
               value={editedProduct.name || ""}
               onChange={(e) =>
                 setEditedProduct({ ...editedProduct, name: e.target.value })
               }
+              className="mb-4"
             />
-            <Input
-              label="Category"
-              value={editedProduct.category || ""}
-              onChange={(e) =>
-                setEditedProduct({ ...editedProduct, category: e.target.value })
-              }
-            />
+            <div className="mb-4">
+              <Select
+                label="Category"
+                placeholder="Select a category"
+                className="max-w-xs"
+                value={editedProduct.category || ""}
+                onChange={(value) =>
+                  setEditedProduct({
+                    ...editedProduct,
+                    category: value,
+                  })
+                }
+              >
+                {categories?.map((category) => (
+                  <SelectItem key={category}>
+                    {category}
+                  </SelectItem>
+                ))}
+              </Select>
+            </div>
             <Input
               label="Price"
               type="number"
@@ -201,6 +293,15 @@ const AdminProductsTable: React.FC = () => {
               onChange={(e) =>
                 setEditedProduct({ ...editedProduct, price: e.target.value })
               }
+              className="mb-4"
+            />
+            <Input
+              label="Brand"
+              value={editedProduct.brand || ""}
+              onChange={(e) =>
+                setEditedProduct({ ...editedProduct, brand: e.target.value })
+              }
+              className="mb-4"
             />
           </ModalBody>
           <ModalFooter>

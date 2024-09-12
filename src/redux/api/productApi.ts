@@ -26,14 +26,17 @@ const productApi = baseApi.injectEndpoints({
       invalidatesTags: ["Products"],
     }),
     updateProduct: builder.mutation({
-      query: ({ productId, token, editedProduct }) => ({
-        method: "PATCH",
-        url: `/product/${productId}`,
-        body: editedProduct,
-        headers: {
-          Authorization: `Bearer ${token}`, // Include the token in the Authorization header
-        },
-      }),
+      query: ({ productId, token, updatedProduct }) => {
+        // console.log(updatedProduct)
+        return {
+          method: "PATCH",
+          url: `/product/${productId}`,
+          body: updatedProduct,
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+          },
+        };
+      },
       invalidatesTags: ["Products"],
     }),
     // createProduct: builder.mutation({
