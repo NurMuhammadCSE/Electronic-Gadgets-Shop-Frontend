@@ -140,13 +140,13 @@ const AddProduct = () => {
             label="Category"
             placeholder="Select a category"
             className="max-w-xs"
-            // value={productData.category}
-            // onClick={(value) =>
-            //   setProductData({ ...productData, category: value as string })
-            // }
+            value={productData.category}
+            onClick={(value) =>
+              setProductData({ ...productData, category: value as string })
+            }
           >
             {categories?.map((category) => (
-              <SelectItem key={category} value={category}>
+              <SelectItem key={category}>
                 {category}
               </SelectItem>
             ))}

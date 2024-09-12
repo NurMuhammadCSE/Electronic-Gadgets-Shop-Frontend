@@ -1,172 +1,83 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React, { useState, useMemo } from "react";
-import {
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-  Button,
-  Select,
-  SelectItem,
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Input,
-  Textarea,
-  Spinner,
-} from "@nextui-org/react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React from "react";
 import { toast } from "sonner";
-import Swal from "sweetalert2";
-import { useGetAllOrdersQuery } from "@/redux/api/orderApi";
+import {
+  useGetAllOrdersQuery,
+  useUpdateOrderStatusMutation,
+} from "@/redux/api/orderApi";
 import { useAppSelector } from "@/redux/hooks";
 
-const AllOrders = () => {
-    const {token} = useAppSelector(state => state.user)
+const statusColors: { [key: string]: string } = {
+  Pending: "bg-yellow-300 text-black",
+  Delivered: "bg-green-300 text-black",
+  Cancelled: "bg-red-300 text-white",
+};
+
+const OrdersManagement = () => {
+  const { token } = useAppSelector((state) => state.user);
   const { data: ordersData, isLoading, error } = useGetAllOrdersQuery(token);
-  // const [updateOrder] = useUpdateOrderMutation();
-console.log(ordersData)
-  // State for modal
-  const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
-  const [currentOrder, setCurrentOrder] = useState<any>(null);
-  const [status, setStatus] = useState<string>("");
+  const [updateOrder] = useUpdateOrderStatusMutation();
 
-  // Handle View Order Details
-  const handleViewOrder = (order: any) => {
-    setCurrentOrder(order);
-    setStatus(order.status); // Set current status
-    setIsOrderModalOpen(true); // Open modal
-  };
+  // Order statuses
+  const allStatus = ["Pending", "Delivered", "Cancelled"];
 
-  // Handle Update Order Status
-  const handleUpdateStatus = async () => {
-    //   try {
-    //     await updateOrder({ orderId: currentOrder._id, status });
-    //     toast.success("Order status updated successfully");
-    //     setIsOrderModalOpen(false); // Close modal after success
-    //   } catch (error) {
-    //     toast.error("Error updating order status");
-    //   }
+  const handleStatusUpdate = async (orderId: string, status: string) => {
+    try {
+      await updateOrder({ orderId, status, token }).unwrap();
+      toast.success("Status Updated Successfully");
+    } catch (error) {
+      console.error("Failed to update status", error);
+      toast.error("Failed to update status");
+    }
   };
 
   if (isLoading) return <p>Loading orders...</p>;
   if (error) return <p>Error loading orders</p>;
 
   return (
-    <div className="container mx-auto p-6 max-w-6xl">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">
-        Orders Management
-      </h1>
+    <div className="container mx-auto p-6">
+      <h1 className="text-3xl font-bold mb-4">Orders Management</h1>
 
-      <Table
-        aria-label="Orders Management Table"
-        className="shadow-lg rounded-lg bg-white"
-      >
-        <TableHeader>
-          <TableColumn>Order ID</TableColumn>
-          <TableColumn>Customer Name</TableColumn>
-          <TableColumn>Order Date</TableColumn>
-          <TableColumn>Total Amount</TableColumn>
-          <TableColumn>Status</TableColumn>
-          <TableColumn>Actions</TableColumn>
-        </TableHeader>
-        <TableBody>
+      <table className="w-full border-collapse border border-gray-200">
+        <thead>
+          <tr className="bg-gray-100">
+            <th className="border border-gray-300 px-4 py-2 text-left">Order ID</th>
+            <th className="border border-gray-300 px-4 py-2 text-left">Customer Name</th>
+            <th className="border border-gray-300 px-4 py-2 text-left">Order Date</th>
+            <th className="border border-gray-300 px-4 py-2 text-left">Total Amount</th>
+            <th className="border border-gray-300 px-4 py-2 text-left">Status</th>
+          </tr>
+        </thead>
+        <tbody>
           {ordersData?.data?.map((order: any) => (
-            <TableRow key={order._id}>
-              <TableCell>{order._id}</TableCell>
-              <TableCell>{order.customerName}</TableCell>
-              <TableCell>
-                {new Date(order.orderDate).toLocaleDateString()}
-              </TableCell>
-              <TableCell>${order.totalAmount.toFixed(2)}</TableCell>
-              <TableCell>
-                <span
-                  className={`py-1 px-3 rounded-full text-xs font-semibold ${
-                    order.status === "Pending"
-                      ? "bg-yellow-100 text-yellow-600"
-                      : order.status === "Delivered"
-                      ? "bg-green-100 text-green-600"
-                      : "bg-gray-100 text-gray-600"
-                  }`}
+            <tr key={order._id}>
+              <td className="border border-gray-300 px-4 py-2">{order._id}</td>
+              <td className="border border-gray-300 px-4 py-2">{order.user.name}</td>
+              <td className="border border-gray-300 px-4 py-2">
+                {new Date(order.createdAt).toLocaleDateString()}
+              </td>
+              <td className="border border-gray-300 px-4 py-2">${order.totalAmount.toFixed(2)}</td>
+              <td className="border border-gray-300 px-4 py-2">
+                <select
+                  defaultValue={order.status}
+                  onChange={(e) => handleStatusUpdate(order._id, e.target.value)}
+                  className={`w-full p-1 border border-gray-300 rounded ${statusColors[order.status]}`}
                 >
-                  {order.status}
-                </span>
-              </TableCell>
-              <TableCell>
-                <Button color="primary" onClick={() => handleViewOrder(order)}>
-                  View Details
-                </Button>
-              </TableCell>
-            </TableRow>
+                  {allStatus.map((status) => (
+                    <option key={status} value={status} className={statusColors[status]}>
+                      {status}
+                    </option>
+                  ))}
+                </select>
+              </td>
+            </tr>
           ))}
-        </TableBody>
-      </Table>
-
-      {/* Order Details Modal */}
-      <Modal
-        isOpen={isOrderModalOpen}
-        onOpenChange={setIsOrderModalOpen}
-        placement="top-center"
-      >
-        <ModalContent>
-          <ModalHeader>Order Details</ModalHeader>
-          <ModalBody>
-            <div className="mb-4">
-              <h2 className="text-lg font-semibold">
-                Order ID: {currentOrder?._id}
-              </h2>
-              <p className="text-sm">Customer: {currentOrder?.customerName}</p>
-              <p className="text-sm">
-                Order Date:{" "}
-                {new Date(currentOrder?.orderDate).toLocaleDateString()}
-              </p>
-              <p className="text-sm">
-                Total Amount: ${currentOrder?.totalAmount.toFixed(2)}
-              </p>
-              <p className="text-sm">
-                Description: {currentOrder?.description}
-              </p>
-            </div>
-            <div className="mb-4">
-              <Select
-                label="Order Status"
-                placeholder="Select status"
-                value={status}
-                onChange={(value) => setStatus(value as string)}
-              >
-                <SelectItem key={"Pending"} value="Pending">
-                  Pending
-                </SelectItem>
-                <SelectItem key={"Shipped"} value="Shipped">
-                  Shipped
-                </SelectItem>
-                <SelectItem key={"Delivered"} value="Delivered">
-                  Delivered
-                </SelectItem>
-              </Select>
-            </div>
-          </ModalBody>
-          <ModalFooter>
-            <Button
-              color="danger"
-              variant="flat"
-              onClick={() => setIsOrderModalOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button color="primary" onClick={handleUpdateStatus}>
-              Save Changes
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+        </tbody>
+      </table>
     </div>
   );
 };
 
-export default AllOrders;
+export default OrdersManagement;

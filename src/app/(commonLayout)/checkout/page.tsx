@@ -7,14 +7,14 @@ import React from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { clearCart } from "@/redux/feature/cartSlice";
 import { Trash2 } from "lucide-react";
-// import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 // import { createOrder } from "@/redux/feature/orderSlice";
 import { useCreteOrderMutation } from "@/redux/api/orderApi";
 
 const CheckoutPage = () => {
   const dispatch = useAppDispatch();
-  // const router = useRouter();
+  const router = useRouter();
 
   const { products, totalPrice } = useAppSelector((state) => state.cart);
   const [createOrder, { isError, isLoading }] = useCreteOrderMutation();
@@ -44,7 +44,7 @@ const CheckoutPage = () => {
     await createOrder({ order, token });
     toast.success("Order placed successfully!");
     handleClearCart();
-    // router.push("/order-success");
+    router.push("/");
   };
 
   return (
