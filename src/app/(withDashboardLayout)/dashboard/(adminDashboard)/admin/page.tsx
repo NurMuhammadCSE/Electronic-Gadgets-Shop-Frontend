@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import React from "react";
+import React, { useState } from "react";
 import {
   Table,
   TableHeader,
@@ -14,24 +14,58 @@ import {
 import {
   useDeleteProductMutation,
   useGetProductsQuery,
+  useUpdateProductMutation,
 } from "@/redux/api/productApi";
 import { Edit, Trash } from "lucide-react"; // lucide-react icons
 import { toast } from "sonner";
 import { useAppSelector } from "@/redux/hooks";
-import Swal from 'sweetalert2'
+import Swal from "sweetalert2";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+  Input,
+} from "@nextui-org/react";
+import Image from "next/image";
 
 const AdminProductsTable: React.FC = () => {
   const { data: productsData, isLoading, error } = useGetProductsQuery("");
   const [deleteProduct] = useDeleteProductMutation();
   const { token } = useAppSelector((state) => state.user);
+  const [updateProduct] = useUpdateProductMutation();
 
-  const handleEditProduct = async (id: string) => {
-    // Navigate to product edit page or open a modal for editing
-    console.log("Edit product:", id);
+  // State for modal
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [currentProduct, setCurrentProduct] = useState<any>(null);
+  const [editedProduct, setEditedProduct] = useState<any>({});
+
+  // Handle Edit product - Open the modal with pre-filled product data
+  const handleEditProduct = (product: any) => {
+    setCurrentProduct(product);
+    setEditedProduct(product); // Pre-fill the form with current product details
+    setIsEditModalOpen(true); // Open modal
   };
 
+  // Handle Update Product
+  const handleUpdateProduct = async () => {
+    try {
+      await updateProduct({
+        productId: currentProduct._id,
+        token,
+        editedProduct,
+      });
+      toast.success("Product updated successfully");
+      setIsEditModalOpen(false); // Close modal after success
+    } catch (error) {
+      toast.error("Error updating product");
+    }
+  };
+
+  // Handle Delete Product
   const handleDeleteProduct = async (productId: string) => {
-    // Show confirmation pop-up
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -40,24 +74,24 @@ const AdminProductsTable: React.FC = () => {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
-      cancelButtonText: "Cancel", // Text for cancel button
+      cancelButtonText: "Cancel",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        // Proceed with the deletion only if the user confirms
         try {
           await deleteProduct({ productId, token });
           toast.success("Product deleted successfully");
-  
-          // Show success message
           Swal.fire("Deleted!", "The product has been deleted.", "success");
         } catch (error) {
           toast.error("Error deleting the product");
-          Swal.fire("Error!", "There was a problem deleting the product.", "error");
+          Swal.fire(
+            "Error!",
+            "There was a problem deleting the product.",
+            "error"
+          );
         }
       }
     });
   };
-  
 
   if (isLoading) return <p>Loading products...</p>;
   if (error) return <p>Error loading products</p>;
@@ -89,6 +123,13 @@ const AdminProductsTable: React.FC = () => {
                     alt={product.name}
                     className="w-10 h-10 object-cover rounded-md mr-4"
                   />
+                   {/* <Image
+                    src={product.imageUrl}
+                    alt={product.name}
+                    width={40}
+                    height={40}
+                    className="w-10 h-10 object-cover rounded-md mr-4"
+                  /> */}
                   <span className="font-medium">{product.name}</span>
                 </div>
               </TableCell>
@@ -112,7 +153,7 @@ const AdminProductsTable: React.FC = () => {
                   {/* Edit Button */}
                   <button
                     className="text-blue-600 hover:text-blue-800 transition-colors duration-200"
-                    onClick={() => handleEditProduct(product._id)}
+                    onClick={() => handleEditProduct(product)}
                   >
                     <Edit className="w-5 h-5" />
                   </button>
@@ -129,6 +170,53 @@ const AdminProductsTable: React.FC = () => {
           ))}
         </TableBody>
       </Table>
+
+      {/* Edit Product Modal */}
+      <Modal
+        isOpen={isEditModalOpen}
+        onOpenChange={setIsEditModalOpen}
+        placement="top-center"
+      >
+        <ModalContent>
+          <ModalHeader>Edit Product</ModalHeader>
+          <ModalBody>
+            <Input
+              label="Product Name"
+              value={editedProduct.name || ""}
+              onChange={(e) =>
+                setEditedProduct({ ...editedProduct, name: e.target.value })
+              }
+            />
+            <Input
+              label="Category"
+              value={editedProduct.category || ""}
+              onChange={(e) =>
+                setEditedProduct({ ...editedProduct, category: e.target.value })
+              }
+            />
+            <Input
+              label="Price"
+              type="number"
+              value={editedProduct.price || ""}
+              onChange={(e) =>
+                setEditedProduct({ ...editedProduct, price: e.target.value })
+              }
+            />
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              color="danger"
+              variant="flat"
+              onClick={() => setIsEditModalOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button color="primary" onClick={handleUpdateProduct}>
+              Save Changes
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </div>
   );
 };

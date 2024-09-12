@@ -16,16 +16,62 @@ const productApi = baseApi.injectEndpoints({
       }),
     }),
     deleteProduct: builder.mutation({
-      query: ({productId, token}) => ({
+      query: ({ productId, token }) => ({
         method: "DELETE",
         url: `/product/${productId}`,
         headers: {
           Authorization: `Bearer ${token}`, // Include the token in the Authorization header
         },
       }),
-      invalidatesTags:['Products']
+      invalidatesTags: ["Products"],
+    }),
+    updateProduct: builder.mutation({
+      query: ({ productId, token, editedProduct }) => ({
+        method: "PATCH",
+        url: `/product/${productId}`,
+        body: editedProduct,
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+        },
+      }),
+      invalidatesTags: ["Products"],
+    }),
+    // createProduct: builder.mutation({
+    //   query: ({ token , productData}) => ({
+    //     method: "PATCH",
+    //     url: `/product/create`,
+    //     body: productData,
+    //     headers: {
+    //       Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+    //     },
+    //   }),
+    //   invalidatesTags: ["Products"],
+    // }),
+
+    createProduct: builder.mutation({
+      query: ({ token, productData }) => {
+        // Log the token and productData
+        console.log("Token:", token);
+        console.log("Product Data:", productData);
+
+        return {
+          method: "POST", // Use POST for creating a new product
+          url: "/product/create",
+          body: productData,
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+          },
+        };
+      },
+      invalidatesTags: ["Products"],
     }),
   }),
 });
 
-export const { useGetProductsQuery, useGetSingleProductQuery, useDeleteProductMutation } = productApi;
+export const {
+  useGetProductsQuery,
+  useGetSingleProductQuery,
+  useDeleteProductMutation,
+  useUpdateProductMutation,
+  useCreateProductMutation,
+} = productApi;
