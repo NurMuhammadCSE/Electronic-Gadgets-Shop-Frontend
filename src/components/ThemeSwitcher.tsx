@@ -18,7 +18,7 @@ export function ThemeSwitcher() {
   return (
     <Switch
       isSelected={theme === "light" ? true : false}
-      onValueChange={(e) => setTheme(e ? "dark" : "light")}
+      onValueChange={(e) => setTheme(e ? "light" : "dark")}
     />
   );
 }
