@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 // pages/404.tsx
 import Image from "next/image";
 import Link from "next/link";

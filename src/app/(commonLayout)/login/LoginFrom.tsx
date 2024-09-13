@@ -48,7 +48,7 @@ export default function LoginFrom() {
         toast.success("User Login Successfully");
         const { token } = user.data;
         const userToken = jwtDecode(token);
-        console.log(userToken, token)
+        // console.log(userToken, token)
         dispatch(setToken(token));
         dispatch(setUser(userToken));
         router.push("/");

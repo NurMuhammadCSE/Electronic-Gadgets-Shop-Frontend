@@ -4,7 +4,7 @@ const LoadingPage = () => {
   return (
     <div className="w-[90%] mx-auto">
       <Image
-        src="https://i.stack.imgur.com/hzk6C.gif"
+        src="https://i.sstatic.net/kOnzy.gif"
         width={500}
         height={500}
         alt="loading"

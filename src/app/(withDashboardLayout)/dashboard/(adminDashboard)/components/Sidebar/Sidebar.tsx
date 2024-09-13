@@ -66,7 +66,6 @@
 
 // export default AdminSidebar;
 
-
 "use client";
 
 import React, { useState } from "react";
@@ -88,7 +87,7 @@ const Sidebar: React.FC = () => {
   ];
 
   return (
-    <div className="relative ">
+    <div>
       {/* Sidebar Toggle Button for Mobile */}
       <div className="lg:hidden fixed top-0 left-0 p-4 z-50">
         <button 
@@ -100,7 +99,7 @@ const Sidebar: React.FC = () => {
       </div>
 
       {/* Sidebar */}
-      <div className={`fixed top-0 left-0 right-0 w-64 h-screen bg-gray-800 text-white shadow-md transition-transform transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 lg:relative lg:w-64 lg:flex lg:flex-col lg:justify-between`}>
+      <div className={`fixed top-0 left-0 w-64 h-screen bg-gray-800 text-white shadow-md transition-transform transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 lg:relative lg:w-64 lg:flex lg:flex-col lg:justify-between`}>
         <div className="flex flex-col h-full">
           <div className="p-4 flex items-center justify-between border-b border-gray-700 lg:hidden mb-4">
             <h2 className="text-2xl font-semibold">Admin Dashboard</h2>

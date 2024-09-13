@@ -3,12 +3,23 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { Input, Textarea, Spinner, Select, SelectItem, Button } from "@nextui-org/react"; // NextUI for form components
-import { useCreateProductMutation, useGetProductsQuery } from "@/redux/api/productApi";
+import {
+  Input,
+  Textarea,
+  Spinner,
+  Select,
+  SelectItem,
+  Button,
+} from "@nextui-org/react"; // NextUI for form components
+import {
+  useCreateProductMutation,
+  useGetProductsQuery,
+} from "@/redux/api/productApi";
 import axios from "axios"; // Add axios for file uploads
 import { useAppSelector } from "@/redux/hooks";
 import { toast } from "sonner";
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 
 const AddProduct = () => {
   const [productData, setProductData] = useState({
@@ -18,7 +29,7 @@ const AddProduct = () => {
     stock: "",
     imageUrl: "",
     description: "",
-    brand:""
+    brand: "",
   });
   const [loading, setLoading] = useState(false);
   const router = useRouter(); // Initialize useRouter
@@ -26,7 +37,7 @@ const AddProduct = () => {
   // Fetch products to extract categories
   const { data: products } = useGetProductsQuery("");
   const [createProduct] = useCreateProductMutation();
-  const { token } = useAppSelector(state => state.user);
+  const { token } = useAppSelector((state) => state.user);
 
   // Get unique categories from the product data
   const categories = useMemo(() => {
@@ -62,7 +73,6 @@ const AddProduct = () => {
     } catch (error) {
       console.error("Error uploading image", error);
       toast.error("Failed to upload image");
-      
     } finally {
       setLoading(false);
     }
@@ -95,11 +105,10 @@ const AddProduct = () => {
         description: "",
         price: "",
         category: "Electronics",
-        brand:"",
+        brand: "",
         stock: "",
         imageUrl: "",
       });
-
     } catch (error) {
       console.error("Error creating product", error);
       toast.error("Failed to add product");
@@ -146,9 +155,7 @@ const AddProduct = () => {
             }
           >
             {categories?.map((category) => (
-              <SelectItem key={category}>
-                {category}
-              </SelectItem>
+              <SelectItem key={category}>{category}</SelectItem>
             ))}
           </Select>
         </div>
@@ -214,4 +221,4 @@ const AddProduct = () => {
   );
 };
 
-export default AddProduct;
+export default dynamic(() => Promise.resolve(AddProduct), { ssr: false });

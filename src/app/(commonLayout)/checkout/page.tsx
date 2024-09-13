@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 // import { createOrder } from "@/redux/feature/orderSlice";
 import { useCreteOrderMutation } from "@/redux/api/orderApi";
+import dynamic from "next/dynamic";
 
 const CheckoutPage = () => {
   const dispatch = useAppDispatch();
@@ -136,4 +137,4 @@ const CheckoutPage = () => {
   );
 };
 
-export default CheckoutPage;
+export default dynamic(() => Promise.resolve(CheckoutPage), { ssr: false });

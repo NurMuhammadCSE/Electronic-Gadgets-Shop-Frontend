@@ -1,9 +1,7 @@
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @next/next/no-img-element */
 import { addToCart } from "@/redux/feature/cartSlice";
 import { Product } from "@/types";
-// import Image from "next/image";
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { useDispatch } from "react-redux";
@@ -28,7 +26,16 @@ const ProductCard = ({ product }: { product: Product }) => {
   return (
     <div className="bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105">
       <Link href={`/product/${_id}`}>
-        <img src={imageUrl} alt={name} className="w-full h-40 object-cover" />
+        {/* <img src={imageUrl} alt={name} className="w-full h-40 object-cover" /> */}
+        <Image
+          width={500}
+          height={500}
+          src={imageUrl}
+          alt={name}
+          objectFit="contain"
+          quality={100}
+          className="w-full h-40 object-cover"
+        />
         <div className="p-4">
           <h2 className="text-xl font-semibold text-gray-800">{name}</h2>
           <p className="text-gray-600 mt-2">{description}</p>

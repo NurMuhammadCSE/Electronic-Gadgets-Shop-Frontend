@@ -32,6 +32,7 @@ import { useAppSelector } from "@/redux/hooks";
 import Swal from "sweetalert2";
 import axios from "axios";
 import Image from "next/image";
+import LoadingPage from "@/app/loading";
 
 const AdminProductsTable: React.FC = () => {
   const { data: productsData, isLoading, error } = useGetProductsQuery("");
@@ -163,7 +164,9 @@ const AdminProductsTable: React.FC = () => {
     });
   };
 
-  if (isLoading) return <p>Loading products...</p>;
+  if (isLoading) return <p>
+    <LoadingPage></LoadingPage>
+  </p>;
   if (error) return <p>Error loading products</p>;
 
   return (

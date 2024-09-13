@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Navbar,
   NavbarBrand,
@@ -20,9 +20,11 @@ import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { logout } from "@/redux/feature/userSlice";
+import dynamic from "next/dynamic";
 
-export default function NavBar() {
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+function NavBar() {
+  const [isClient, setIsClient] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user } = useAppSelector((state) => state.user);
   const { selectedItems } = useAppSelector((state) => state.cart);
   const dispatch = useAppDispatch();
@@ -36,23 +38,32 @@ export default function NavBar() {
     admin: "/dashboard/admin",
   };
 
+  useEffect(() => {
+    setIsClient(true); // Ensures the component is rendered on the client-side
+  }, []);
+
   const handleLogout = () => {
     dispatch(logout());
     setUser(null);
     router.push("/");
   };
 
+  if (!isClient) {
+    return null; // Prevent rendering on the server
+  }
+
   return (
     <Navbar
       maxWidth="2xl"
-      // isBordered
       isMenuOpen={isMenuOpen}
       onMenuOpenChange={setIsMenuOpen}
     >
+      {/* Mobile Menu Toggle */}
       <NavbarContent className="sm:hidden" justify="start">
         <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} />
       </NavbarContent>
 
+      {/* Brand Logo (Centered for Mobile) */}
       <NavbarContent className="sm:hidden pr-3" justify="center">
         <NavbarBrand>
           <p className="font-bold text-inherit">
@@ -63,6 +74,7 @@ export default function NavBar() {
         </NavbarBrand>
       </NavbarContent>
 
+      {/* Desktop Navigation */}
       <NavbarContent className="hidden sm:flex gap-4" justify="end">
         <NavbarBrand>
           <p className="font-bold text-inherit">
@@ -86,6 +98,7 @@ export default function NavBar() {
           {user?.email && <Link href={routeMap[user.role] || "/"}>Dashboard</Link>}
         </NavbarItem>
 
+        {/* Cart Icon */}
         <NavbarItem>
           <Badge content={selectedItems} color="warning">
             <Link href="/cart">
@@ -96,6 +109,8 @@ export default function NavBar() {
         <NavbarItem>
           <ThemeSwitcher />
         </NavbarItem>
+
+        {/* Authentication */}
         {user?.email ? (
           <NavbarItem>
             <Button onClick={handleLogout} color="primary" variant="flat">
@@ -109,6 +124,7 @@ export default function NavBar() {
         )}
       </NavbarContent>
 
+      {/* Mobile Menu */}
       <NavbarMenu>
         <NavbarMenuItem>
           <Badge content={selectedItems} color="warning">
@@ -117,6 +133,8 @@ export default function NavBar() {
             </Link>
           </Badge>
         </NavbarMenuItem>
+
+        {/* Dynamic Menu Items */}
         {menuItems.map((item, index) => (
           <NavbarMenuItem key={`${item}-${index}`}>
             <Link
@@ -139,3 +157,5 @@ export default function NavBar() {
     </Navbar>
   );
 }
+
+export default dynamic(() => Promise.resolve(NavBar), { ssr: false });

@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import { useGetUserOrdersQuery } from "@/redux/api/orderApi"; // Assuming you have an order API
 import OrderCard from "./components/OrderCard/OrderCard";
 import { useAppSelector } from "@/redux/hooks";
+import dynamic from "next/dynamic";
 
 const Dashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"delivered" | "pending">(
@@ -64,4 +65,4 @@ const Dashboard: React.FC = () => {
   );
 };
 
-export default Dashboard;
+export default dynamic(() => Promise.resolve(Dashboard), { ssr: false });

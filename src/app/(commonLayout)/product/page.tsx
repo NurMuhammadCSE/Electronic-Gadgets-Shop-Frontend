@@ -1,14 +1,30 @@
 "use client";
+import LoadingPage from "@/app/loading";
 import ProductCard from "@/components/ui/ProductCard";
 import { useGetProductsQuery } from "@/redux/api/productApi";
 import { Product } from "@/types";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 
 const ProductPage = () => {
+  const [isClient, setIsClient] = useState(false);
+
   const { data, isError, isLoading } = useGetProductsQuery("");
 
-  if (isLoading) return <p className="text-center text-gray-500">Loading...</p>;
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // Render nothing while the client-side hydration is happening
+  if (!isClient) return null;
+
+  if (isLoading)
+    return (
+      <p className="text-center text-gray-500">
+        <LoadingPage></LoadingPage>
+      </p>
+    );
   if (isError)
     return <p className="text-center text-red-500">Error loading products</p>;
 
@@ -74,7 +90,7 @@ const ProductPage = () => {
   );
 };
 
-export default ProductPage;
+export default dynamic(() => Promise.resolve(ProductPage), { ssr: false });
 
 // "use client";
 // import ProductCard from "@/components/ui/ProductCard";
@@ -93,7 +109,7 @@ export default ProductPage;
 //     return <p className="text-center text-red-500">Error loading products</p>;
 //   // console.log(data?.data);
 
-//   // const res = await fetch("http://localhost:5000/api/product/products", {
+//   // const res = await fetch("https://electronic-gadgets-shop-backend.vercel.app/api/product/products", {
 //   //   next: {
 //   //     revalidate: 30,
 //   //   },

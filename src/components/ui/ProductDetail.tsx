@@ -8,6 +8,7 @@ import { Product } from "@/types";
 import { addToCart } from "@/redux/feature/cartSlice";
 import ReviewForm from "./ReviewForm";
 import { useGetReviewsByProductIdQuery } from "@/redux/api/reviewApi";
+import Image from "next/image";
 
 interface ProductDetailProps {
   product: Product;
@@ -17,7 +18,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
   const dispatch = useDispatch();
 
   const { data: reviews } = useGetReviewsByProductIdQuery(product._id);
-  // console.log(reviews?.data);
+  console.log(reviews?.data);
   const onAddToCart = () => {
     dispatch(addToCart(product));
   };
@@ -26,11 +27,21 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
     <div>
       <div className="container mx-auto p-6">
         <div className="flex flex-col md:flex-row items-center bg-white shadow-lg rounded-lg overflow-hidden">
-          <img
+          {/* <img
             src={product?.imageUrl}
             alt={product?.name}
             className="w-full md:w-1/2 h-auto object-cover"
-          />
+          /> */}
+          <div>
+            <Image
+              width={500}
+              height={500}
+              src={product?.imageUrl}
+              alt={product?.name}
+              objectFit="contain"
+              quality={100}
+              className="w-full md:w-1/2 h-auto object-cover"            />
+          </div>
           <div className="w-full md:w-1/2 p-6">
             <h1 className="text-4xl font-bold text-gray-800 mb-4">
               {product?.name}

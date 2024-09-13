@@ -8,6 +8,8 @@ import {
   useUpdateOrderStatusMutation,
 } from "@/redux/api/orderApi";
 import { useAppSelector } from "@/redux/hooks";
+import dynamic from "next/dynamic";
+import LoadingPage from "@/app/loading";
 
 const statusColors: { [key: string]: string } = {
   Pending: "bg-yellow-300 text-black",
@@ -33,7 +35,9 @@ const OrdersManagement = () => {
     }
   };
 
-  if (isLoading) return <p>Loading orders...</p>;
+  if (isLoading) return <p>
+    <LoadingPage></LoadingPage>
+  </p>;
   if (error) return <p>Error loading orders</p>;
 
   return (
@@ -43,30 +47,52 @@ const OrdersManagement = () => {
       <table className="w-full border-collapse border border-gray-200">
         <thead>
           <tr className="bg-gray-100">
-            <th className="border border-gray-300 px-4 py-2 text-left">Order ID</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">Customer Name</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">Order Date</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">Total Amount</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">Status</th>
+            <th className="border border-gray-300 px-4 py-2 text-left">
+              Order ID
+            </th>
+            <th className="border border-gray-300 px-4 py-2 text-left">
+              Customer Name
+            </th>
+            <th className="border border-gray-300 px-4 py-2 text-left">
+              Order Date
+            </th>
+            <th className="border border-gray-300 px-4 py-2 text-left">
+              Total Amount
+            </th>
+            <th className="border border-gray-300 px-4 py-2 text-left">
+              Status
+            </th>
           </tr>
         </thead>
         <tbody>
           {ordersData?.data?.map((order: any) => (
             <tr key={order._id}>
               <td className="border border-gray-300 px-4 py-2">{order._id}</td>
-              <td className="border border-gray-300 px-4 py-2">{order.user.name}</td>
+              <td className="border border-gray-300 px-4 py-2">
+                {order.user.name}
+              </td>
               <td className="border border-gray-300 px-4 py-2">
                 {new Date(order.createdAt).toLocaleDateString()}
               </td>
-              <td className="border border-gray-300 px-4 py-2">${order.totalAmount.toFixed(2)}</td>
+              <td className="border border-gray-300 px-4 py-2">
+                ${order.totalAmount.toFixed(2)}
+              </td>
               <td className="border border-gray-300 px-4 py-2">
                 <select
                   defaultValue={order.status}
-                  onChange={(e) => handleStatusUpdate(order._id, e.target.value)}
-                  className={`w-full p-1 border border-gray-300 rounded ${statusColors[order.status]}`}
+                  onChange={(e) =>
+                    handleStatusUpdate(order._id, e.target.value)
+                  }
+                  className={`w-full p-1 border border-gray-300 rounded ${
+                    statusColors[order.status]
+                  }`}
                 >
                   {allStatus.map((status) => (
-                    <option key={status} value={status} className={statusColors[status]}>
+                    <option
+                      key={status}
+                      value={status}
+                      className={statusColors[status]}
+                    >
                       {status}
                     </option>
                   ))}
@@ -80,4 +106,4 @@ const OrdersManagement = () => {
   );
 };
 
-export default OrdersManagement;
+export default dynamic(() => Promise.resolve(OrdersManagement), { ssr: false });

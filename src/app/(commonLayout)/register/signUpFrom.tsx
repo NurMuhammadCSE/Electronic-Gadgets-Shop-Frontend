@@ -23,7 +23,7 @@ const SignUpFrom = () => {
     formState: { errors },
   } = useForm<Inputs>();
 
-  // TODO: POST http://localhost:5000/api/auth/signUp net::ERR_CONNECTION_REFUSED
+  // TODO: POST https://electronic-gadgets-shop-backend.vercel.app/api/auth/signUp net::ERR_CONNECTION_REFUSED
   //! Sign Up Successfully
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
