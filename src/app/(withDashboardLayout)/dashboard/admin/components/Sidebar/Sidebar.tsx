@@ -69,21 +69,17 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useAppSelector } from "@/redux/hooks";
 import Link from "next/link";
 import { Home, ShoppingCart, Box, List, Menu, X } from "lucide-react";
 
 const Sidebar: React.FC = () => {
-  const router = useRouter();
-  const { user } = useAppSelector((state) => state.user);
   const [isOpen, setIsOpen] = useState(false);
 
   const menuItems = [
     { label: "Home", icon: <Home size={24} />, href: "/" },
-    { label: "Products", icon: <Box size={24} />, href: "/dashboard/products" },
-    { label: "Add Product", icon: <List size={24} />, href: "/dashboard/products/add-product" },
-    { label: "Orders", icon: <ShoppingCart size={24} />, href: "/dashboard/orders" },
+    { label: "Products", icon: <Box size={24} />, href: "/dashboard/admin/products" },
+    { label: "Add Product", icon: <List size={24} />, href: "/dashboard/admin/products/add-product" },
+    { label: "Orders", icon: <ShoppingCart size={24} />, href: "/dashboard/admin/orders" },
   ];
 
   return (
@@ -112,7 +108,7 @@ const Sidebar: React.FC = () => {
           </div>
           <nav className="flex-grow overflow-y-auto">
             {menuItems.map((item) => (
-              <Link key={item.label} href={item.href} className={`flex items-center p-4 hover:bg-gray-700 transition duration-200 ${router.asPath === item.href ? "bg-gray-700" : ""}`}>
+              <Link key={item.label} href={item.href} className={`flex items-center p-4 hover:bg-gray-700 transition duration-200`}>
                 {item.icon}
                 <span className="ml-4">{item.label}</span>
               </Link>

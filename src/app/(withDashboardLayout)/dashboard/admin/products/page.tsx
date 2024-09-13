@@ -33,6 +33,7 @@ import Swal from "sweetalert2";
 import axios from "axios";
 import Image from "next/image";
 import LoadingPage from "@/app/loading";
+import dynamic from "next/dynamic";
 
 const AdminProductsTable: React.FC = () => {
   const { data: productsData, isLoading, error } = useGetProductsQuery("");
@@ -164,9 +165,12 @@ const AdminProductsTable: React.FC = () => {
     });
   };
 
-  if (isLoading) return <p>
-    <LoadingPage></LoadingPage>
-  </p>;
+  if (isLoading)
+    return (
+      <p>
+        <LoadingPage></LoadingPage>
+      </p>
+    );
   if (error) return <p>Error loading products</p>;
 
   return (
@@ -283,10 +287,8 @@ const AdminProductsTable: React.FC = () => {
                   })
                 }
               >
-                {categories?.map((category) => (
-                  <SelectItem key={category}>
-                    {category}
-                  </SelectItem>
+                {categories?.map((category: any, index) => (
+                  <SelectItem key={index}>{category}</SelectItem>
                 ))}
               </Select>
             </div>
@@ -326,4 +328,6 @@ const AdminProductsTable: React.FC = () => {
   );
 };
 
-export default AdminProductsTable;
+export default dynamic(() => Promise.resolve(AdminProductsTable), {
+  ssr: false,
+});

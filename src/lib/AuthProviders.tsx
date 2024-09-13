@@ -7,7 +7,7 @@ const AuthContext = createContext<any>({
   user: null,
   setUser: () => {},
 });
-export const uthProvider = ({ children }: any) => {
+export const AuthProvider = ({ children }: any) => {
   const [user, setUser] = useState<any>(null);
   const fetch = async () => {
     const res = await userInfo();

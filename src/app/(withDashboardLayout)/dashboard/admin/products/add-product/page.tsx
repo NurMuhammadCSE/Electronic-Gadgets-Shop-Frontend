@@ -151,11 +151,14 @@ const AddProduct = () => {
             className="max-w-xs"
             value={productData.category}
             onClick={(value) =>
-              setProductData({ ...productData, category: value as string })
+              setProductData({
+                ...productData,
+                category: value as unknown as string,
+              })
             }
           >
-            {categories?.map((category) => (
-              <SelectItem key={category}>{category}</SelectItem>
+            {categories?.map((category: any, index) => (
+              <SelectItem key={index}>{category}</SelectItem>
             ))}
           </Select>
         </div>

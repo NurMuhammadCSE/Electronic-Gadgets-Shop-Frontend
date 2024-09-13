@@ -59,7 +59,7 @@ interface ProductId {
 export const generateStaticParams = async () => {
   try {
     const res = await fetch(
-      "https://electronic-gadgets-shop-backend.vercel.app/api/product/products"
+      "https://electronic-gadgets-shop-backend.vercel.app/api/product/products",
     );
     const products = await res.json();
 
