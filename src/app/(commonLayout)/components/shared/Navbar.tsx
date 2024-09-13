@@ -43,6 +43,7 @@ function NavBar() {
   }, []);
 
   const handleLogout = () => {
+    document.cookie = `auth-token=""`;
     dispatch(logout());
     setUser(null);
     router.push("/");
