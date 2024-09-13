@@ -7,9 +7,9 @@ import {
   Input,
   Textarea,
   Spinner,
+  Button,
   Select,
   SelectItem,
-  Button,
 } from "@nextui-org/react"; // NextUI for form components
 import {
   useCreateProductMutation,
@@ -95,8 +95,20 @@ const AddProduct = () => {
         return;
       }
 
-      const newProduct = await createProduct({ productData, token }).unwrap();
-      // console.log(newProduct);
+      // Create the product with serializable data
+      const newProduct = await createProduct({
+        productData: {
+          name: productData.name,
+          category: productData.category,
+          price: productData.price,
+          stock: productData.stock,
+          imageUrl: productData.imageUrl,
+          description: productData.description,
+          brand: productData.brand,
+        },
+        token,
+      }).unwrap();
+
       toast.success("Product added successfully");
       router.push("/product"); // Adjust the route as needed
 
@@ -146,19 +158,21 @@ const AddProduct = () => {
         {/* Category */}
         <div className="mb-4">
           <Select
-            label="Category"
-            placeholder="Select a category"
+            label="Product Category"
+            placeholder="Select Your Category"
             className="max-w-xs"
             value={productData.category}
-            onClick={(value) =>
+            onChange={(e) =>
               setProductData({
                 ...productData,
-                category: value as unknown as string,
+                category: e.target.value,
               })
             }
           >
-            {categories?.map((category: any, index) => (
-              <SelectItem key={index}>{category}</SelectItem>
+            {categories?.map((category: any) => (
+              <SelectItem key={category} value={category}>
+                {category}
+              </SelectItem>
             ))}
           </Select>
         </div>
