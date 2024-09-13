@@ -67,7 +67,7 @@ function Cart() {
               <CartDetails key={product._id} product={product} />
             ))
           ) : (
-            <p className="text-2xl text-red-500">No products found</p>
+            <p className="text-2xl text-red-500">No Products Found</p>
           )}
         </div>
         <OrderSummary />

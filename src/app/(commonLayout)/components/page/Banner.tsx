@@ -43,17 +43,17 @@ const Banner: React.FC = () => {
         </p>
         <div className="flex justify-center gap-4">
           <Link
-            href="/products"
+            href="/product"
             className="bg-[#30415A] text-white font-semibold py-3 px-4 rounded-lg hover:bg-[#1a2538] transition duration-300 shadow-lg text-xl md:text-2xl"
           >
             Shop Now
           </Link>
-          <Link
+          {/* <Link
             href="/about"
             className="bg-transparent border-2 border-white text-white font-semibold py-3 px-4 rounded-lg hover:bg-white hover:text-[#30415A] transition duration-300 shadow-lg text-xl md:text-2xl"
           >
             Learn More
-          </Link>
+          </Link> */}
         </div>
       </div>
     </section>
