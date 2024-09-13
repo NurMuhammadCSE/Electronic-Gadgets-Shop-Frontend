@@ -8,7 +8,7 @@ import { store } from "@/redux/store";
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <NextUIProvider>
-      <NextThemesProvider attribute="class" defaultTheme="dark">
+      <NextThemesProvider attribute="class" defaultTheme="light">
         <Toaster></Toaster>
         <Provider store={store}>
           {children}
