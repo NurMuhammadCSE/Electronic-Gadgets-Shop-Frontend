@@ -23,8 +23,7 @@
 
 // export default CommonPage;
 
-"use client"
-import FeaturedProduct from "@/components/ui/FeaturedProduct";
+"use client";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 
@@ -32,7 +31,12 @@ const Banner = dynamic(() => import("./components/page/Banner"), {
   ssr: false,
 });
 const ProductPage = dynamic(() => import("./product/page"), { ssr: false });
-
+const FeaturedProduct = dynamic(() => import("@/components/ui/FeaturedProduct"), {
+  ssr: false,
+});
+const SpecialOffers = dynamic(() => import("@/components/ui/SpecialOffers"), {
+  ssr: false,
+});
 const CommonPage = () => {
   const [isClient, setIsClient] = useState(false);
 
@@ -47,6 +51,7 @@ const CommonPage = () => {
     <div>
       <Banner />
       <FeaturedProduct></FeaturedProduct>
+      <SpecialOffers></SpecialOffers>
       <ProductPage />
     </div>
   );
