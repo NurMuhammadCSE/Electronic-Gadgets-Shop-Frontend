@@ -24,6 +24,7 @@
 // export default CommonPage;
 
 "use client"
+import FeaturedProduct from "@/components/ui/FeaturedProduct";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 
@@ -45,6 +46,7 @@ const CommonPage = () => {
   return (
     <div>
       <Banner />
+      <FeaturedProduct></FeaturedProduct>
       <ProductPage />
     </div>
   );
