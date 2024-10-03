@@ -24,6 +24,7 @@
 // export default CommonPage;
 
 "use client";
+import HeroSectionContainer from "@/components/ui/HeroSection";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 
@@ -61,6 +62,7 @@ const CommonPage = () => {
       <ProductPage />
       <LatestArrivals></LatestArrivals>
       <ProductReviews></ProductReviews>
+      <HeroSectionContainer></HeroSectionContainer>
     </div>
   );
 };
