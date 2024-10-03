@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // components/SpecialOffers.tsx
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
@@ -59,7 +60,7 @@ const SpecialOffers: React.FC = () => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [offers]);
+  }, []);
 
   // Convert seconds to HH:MM:SS format
   const formatTime = (seconds: number) => {
