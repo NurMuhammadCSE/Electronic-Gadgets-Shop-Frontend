@@ -66,7 +66,7 @@ export default function FeaturedProducts() {
       <Swiper
         slidesPerView={4}
         spaceBetween={30}
-        centeredSlides={true}
+        centeredSlides={false}
         pagination={{ clickable: true }}
         modules={[Pagination]}
         className="mySwiper"

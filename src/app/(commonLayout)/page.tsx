@@ -37,6 +37,9 @@ const FeaturedProduct = dynamic(() => import("@/components/ui/FeaturedProduct"),
 const SpecialOffers = dynamic(() => import("@/components/ui/SpecialOffers"), {
   ssr: false,
 });
+const ProductReviews = dynamic(() => import("@/components/ui/ProductReviews"), {
+  ssr: false,
+});
 const CommonPage = () => {
   const [isClient, setIsClient] = useState(false);
 
@@ -53,6 +56,7 @@ const CommonPage = () => {
       <FeaturedProduct></FeaturedProduct>
       <SpecialOffers></SpecialOffers>
       <ProductPage />
+      <ProductReviews></ProductReviews>
     </div>
   );
 };

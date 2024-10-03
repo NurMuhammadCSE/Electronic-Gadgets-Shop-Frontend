@@ -1,4 +1,5 @@
 // components/SpecialOffers.tsx
+import Image from "next/image";
 import React, { useEffect, useState } from "react";
 
 interface Offer {
@@ -58,7 +59,7 @@ const SpecialOffers: React.FC = () => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [offers]);
 
   // Convert seconds to HH:MM:SS format
   const formatTime = (seconds: number) => {
@@ -81,10 +82,12 @@ const SpecialOffers: React.FC = () => {
             key={offer.id}
             className="p-6 bg-red-100 shadow-lg rounded-lg relative"
           >
-            <img
+            <Image
               src={offer.imageUrl}
               alt={offer.product}
               className="w-full h-48 object-cover mb-4 rounded-lg"
+              height={500}
+              width={500}
             />
             <div className="text-center">
               <h3 className="text-2xl font-bold">{offer.product}</h3>
