@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // components/SpecialOffers.tsx
 import Image from "next/image";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 interface Offer {
@@ -101,9 +102,12 @@ const SpecialOffers: React.FC = () => {
               <div className="text-2xl font-bold text-white bg-red-600 px-4 py-2 rounded-md">
                 {formatTime(timeLeft[offer.id])}
               </div>
-              <button className="mt-4 bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition duration-300">
+              <Link
+                href="/product"
+                className="bg-[#FF5733] mt-4 text-white font-semibold py-3 px-4 rounded-lg hover:bg-[#ff7a45] transition duration-300 shadow-lg text-xl md:text-2xl"
+              >
                 Shop Now
-              </button>
+              </Link>
             </div>
           </div>
         ))}

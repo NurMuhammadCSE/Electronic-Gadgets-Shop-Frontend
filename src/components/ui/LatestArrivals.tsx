@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 interface Product {
@@ -78,9 +79,12 @@ const LatestArrivals: React.FC = () => {
 
             {/* Hover Effect */}
             <div className="absolute inset-0 bg-gray-900 bg-opacity-0 hover:bg-opacity-60 transition duration-300 flex justify-center items-center opacity-0 hover:opacity-100">
-              <button className="bg-white text-gray-900 font-semibold py-2 px-6 rounded-lg">
+              <Link
+                href="/product"
+                className="bg-white text-gray-900 font-semibold py-2 px-6 rounded-lg"
+              >
                 Shop Now
-              </button>
+              </Link>
             </div>
           </div>
         ))}

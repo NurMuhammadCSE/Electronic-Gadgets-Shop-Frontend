@@ -3,17 +3,17 @@ import LoginFrom from "./LoginFrom";
 
 const loginPage = () => {
   return (
-    <div className="mt-24 flex justify-center items-center">
+    <div className="mt-20 flex justify-center items-center">
       <Card className="w-96">
         <CardHeader className="flex justify-center">
           <div className="flex">
-            <p className="font-bold text-inherit px-4">Login</p>
+            <p className="font-bold text-3xl px-4">Login</p>
           </div>
         </CardHeader>
         <CardBody>
           {/* 🚀 Demo Credentials */}
-          <div className="text-center mb-4">
-            <p className="text-sm font-semibold">🚀 Demo Credentials</p>
+          <div className="text-center mb-2">
+            {/* <p className="text-sm font-semibold">🚀 Demo Credentials</p> */}
             <p className="text-sm">
               <strong>Admin Login</strong>: web@programming-hero.com
             </p>
@@ -27,7 +27,9 @@ const loginPage = () => {
               <strong>Password</strong>: 123456
             </p>
           </div>
-          <LoginFrom></LoginFrom>
+          <div className="flex justify-center">
+            <LoginFrom></LoginFrom>
+          </div>
         </CardBody>
       </Card>
     </div>
