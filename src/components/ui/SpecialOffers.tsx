@@ -81,7 +81,7 @@ const SpecialOffers: React.FC = () => {
         {offers.map((offer) => (
           <div
             key={offer.id}
-            className="p-6 bg-red-100 shadow-lg rounded-lg relative"
+            className="p-6 bg-white-100 shadow-lg rounded-lg relative"
           >
             <Image
               src={offer.imageUrl}

@@ -22,28 +22,20 @@
 // };
 
 // export default CommonPage;
-
 "use client";
-import HeroSectionContainer from "@/components/ui/HeroSection";
+// import HeroSectionContainer from "@/components/ui/HeroSection";
+import WhyShopWithUs from "@/components/ui/WhyShopWithUs";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 
-const Banner = dynamic(() => import("./components/page/Banner"), {
-  ssr: false,
-});
+// Dynamically import components
+const Banner = dynamic(() => import("./components/page/Banner"), { ssr: false });
 const ProductPage = dynamic(() => import("./product/page"), { ssr: false });
-const FeaturedProduct = dynamic(() => import("@/components/ui/FeaturedProduct"), {
-  ssr: false,
-});
-const SpecialOffers = dynamic(() => import("@/components/ui/SpecialOffers"), {
-  ssr: false,
-});
-const ProductReviews = dynamic(() => import("@/components/ui/ProductReviews"), {
-  ssr: false,
-});
-const LatestArrivals = dynamic(() => import("@/components/ui/LatestArrivals"), {
-  ssr: false,
-});
+const FeaturedProduct = dynamic(() => import("@/components/ui/FeaturedProduct"), { ssr: false });
+const SpecialOffers = dynamic(() => import("@/components/ui/SpecialOffers"), { ssr: false });
+const ProductReviews = dynamic(() => import("@/components/ui/ProductReviews"), { ssr: false });
+const LatestArrivals = dynamic(() => import("@/components/ui/LatestArrivals"), { ssr: false });
+
 const CommonPage = () => {
   const [isClient, setIsClient] = useState(false);
 
@@ -56,13 +48,14 @@ const CommonPage = () => {
 
   return (
     <div>
+      {/* <HeroSectionContainer /> */}
       <Banner />
-      <FeaturedProduct></FeaturedProduct>
-      <SpecialOffers></SpecialOffers>
+      <FeaturedProduct />
+      <LatestArrivals />
+      <SpecialOffers />
       <ProductPage />
-      <LatestArrivals></LatestArrivals>
-      <ProductReviews></ProductReviews>
-      <HeroSectionContainer></HeroSectionContainer>
+      <ProductReviews />
+      <WhyShopWithUs />
     </div>
   );
 };

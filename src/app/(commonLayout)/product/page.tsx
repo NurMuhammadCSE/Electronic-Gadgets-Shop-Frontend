@@ -47,6 +47,10 @@ const ProductPage = () => {
 
   return (
     <div className="p-6 max-w-screen-xl mx-auto">
+      <h2 className="text-4xl font-bold text-center mb-10">
+        Explore our Products
+      </h2>
+
       {[
         {
           title: "Electronics",
