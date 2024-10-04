@@ -87,7 +87,7 @@ const SignUpFrom = () => {
             <p className="text-red-500">Password is required</p>
           )}
         </div>
-        <div className="flex justify-end text-primary">
+        <div className="flex justify-end font-medium text-[#30415A] hover:text-[#3D6D8D]">
           <Link href="/login">already have account ?</Link>
         </div>
         <div className="flex justify-end "></div>

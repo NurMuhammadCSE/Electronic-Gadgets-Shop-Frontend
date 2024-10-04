@@ -122,14 +122,14 @@ export default function LoginForm() {
               New here? Register now
             </Link>
           </div>
-          <div className="text-sm">
+          {/* <div className="text-sm">
             <a
               href="#"
               className="font-medium text-[#30415A] hover:text-[#3D6D8D]"
             >
               Forgot your password?
             </a>
-          </div>
+          </div> */}
         </div>
         <div className="flex justify-end ">
           <ActionSubmitButton>login</ActionSubmitButton>
