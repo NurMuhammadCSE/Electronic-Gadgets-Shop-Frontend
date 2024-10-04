@@ -71,12 +71,12 @@ function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="#" color="primary" className="hover:text-blue-400 transition">
+                <Link href="/terms-condition" color="primary" className="hover:text-blue-400 transition">
                   Terms & Conditions
                 </Link>
               </li>
               <li>
-                <Link href="#" color="primary" className="hover:text-blue-400 transition">
+                <Link href="/privacy-policy" color="primary" className="hover:text-blue-400 transition">
                   Privacy Policy
                 </Link>
               </li>
