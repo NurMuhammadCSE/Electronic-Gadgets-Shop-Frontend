@@ -4,7 +4,7 @@
 
 ## Live URLs
 
-- **Frontend**: [Gadget Hub Frontend](https://electronic-gadget-hub-final.vercel.app/)
+- **Frontend**: [Gadget Hub Frontend](https://electronic-gadgets-shop-final.vercel.app/)
 - **Backend**: [Gadget Hub Backend](https://electronic-gadgets-shop-backend.vercel.app/)
 
 
